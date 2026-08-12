@@ -1,203 +1,159 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { VisualizerController } from './VisualizerController';
+import { AlgorithmLab, AlgorithmStep } from './AlgorithmLab';
 import { clsx } from 'clsx';
-import { ArrowRight, CornerDownRight } from 'lucide-react';
 
-interface LLStep {
+interface LLStep extends AlgorithmStep {
   nodes: number[];
-  reversedPointers: number[]; // index of nodes whose next pointer points to prev
-  prevIndex: number;
-  currIndex: number;
-  message: string;
-  activeLineIndex: number;
+  headIdx: number;
+  currentIdx: number | null;
+  prevIdx: number | null;
+  nextIdx: number | null;
+  reversed: number[];
 }
 
-const REVERSE_LL_CODE = [
-  'prev = null, curr = head',
-  'while curr != null:',
-  '  nextTemp = curr.next',
-  '  curr.next = prev',
-  '  prev = curr, curr = nextTemp',
-  'return prev (new head)'
+const LL_CODE = [
+  'prev = null, current = head',
+  'while current != null:',
+  '  next = current.next',
+  '  current.next = prev',
+  '  prev = current',
+  '  current = next',
+  'return prev (new head)',
 ];
 
+function generateReversalSteps(nodes: number[]): LLStep[] {
+  const steps: LLStep[] = [];
+  const n = nodes.length;
+  const reversed: number[] = [];
+
+  steps.push({ nodes: [...nodes], headIdx: 0, currentIdx: 0, prevIdx: null, nextIdx: 1, reversed: [], message: `Starting linked list reversal. Head = ${nodes[0]}. prev = null, current = ${nodes[0]}.`, activeLineIndex: 0 });
+
+  let prevIdx: number | null = null;
+  let currIdx: number | null = 0;
+
+  while (currIdx !== null && currIdx < n) {
+    const nextIdx: number | null = currIdx + 1 < n ? currIdx + 1 : null;
+    steps.push({ nodes: [...nodes], headIdx: 0, currentIdx: currIdx, prevIdx, nextIdx, reversed: [...reversed], message: `Save next = ${nextIdx !== null ? nodes[nextIdx] : 'null'}. Reverse pointer: ${nodes[currIdx]}.next = ${prevIdx !== null ? nodes[prevIdx] : 'null'}.`, activeLineIndex: 3 });
+
+    reversed.unshift(nodes[currIdx]);
+    steps.push({ nodes: [...nodes], headIdx: 0, currentIdx: currIdx, prevIdx, nextIdx, reversed: [...reversed], message: `Move forward: prev = ${nodes[currIdx]}, current = ${nextIdx !== null ? nodes[nextIdx] : 'null'}.`, activeLineIndex: 5 });
+
+    prevIdx = currIdx;
+    currIdx = nextIdx;
+  }
+
+  steps.push({ nodes: [...nodes], headIdx: n - 1, currentIdx: null, prevIdx, nextIdx: null, reversed: [...reversed], message: `Reversal complete! New head = ${nodes[n - 1]}. List: ${reversed.join(' → ')}.`, activeLineIndex: 6 });
+  return steps;
+}
+
 export const LinkedListVisualizer: React.FC = () => {
-  const [initialNodes] = useState<number[]>([10, 20, 30, 40, 50]);
+  const [nodes] = useState([10, 20, 30, 40, 50]);
   const [steps, setSteps] = useState<LLStep[]>([]);
-  const [currentStepIndex, setCurrentStepIndex] = useState<number>(0);
-  const [isPlaying, setIsPlaying] = useState<boolean>(false);
-  const [speed, setSpeed] = useState<number>(1);
+  const [currentStepIndex, setCurrentStepIndex] = useState(0);
+  const [isPlaying, setIsPlaying] = useState(false);
+  const [speed, setSpeed] = useState(1);
 
-  const generateReverseSteps = (nodes: number[]) => {
-    const generated: LLStep[] = [];
-    const reversedPointers: number[] = [];
-
-    generated.push({
-      nodes: [...nodes],
-      reversedPointers: [],
-      prevIndex: -1,
-      currIndex: 0,
-      message: 'Initialized prev = null, curr = Node(10). Ready to reverse linked list.',
-      activeLineIndex: 0
-    });
-
-    for (let i = 0; i < nodes.length; i++) {
-      generated.push({
-        nodes: [...nodes],
-        reversedPointers: [...reversedPointers],
-        prevIndex: i - 1,
-        currIndex: i,
-        message: `Saved nextTemp = ${i + 1 < nodes.length ? `Node(${nodes[i + 1]})` : 'null'}. Pointing Node(${nodes[i]}).next to ${i > 0 ? `Node(${nodes[i - 1]})` : 'null'}.`,
-        activeLineIndex: 3
-      });
-
-      reversedPointers.push(i);
-
-      generated.push({
-        nodes: [...nodes],
-        reversedPointers: [...reversedPointers],
-        prevIndex: i,
-        currIndex: i + 1,
-        message: `Advanced pointers: prev = Node(${nodes[i]}), curr = ${i + 1 < nodes.length ? `Node(${nodes[i + 1]})` : 'null'}.`,
-        activeLineIndex: 4
-      });
-    }
-
-    generated.push({
-      nodes: [...nodes],
-      reversedPointers: [...reversedPointers],
-      prevIndex: nodes.length - 1,
-      currIndex: nodes.length,
-      message: `Loop completed! Return prev = Node(${nodes[nodes.length - 1]}) as the new head of the reversed list.`,
-      activeLineIndex: 5
-    });
-
-    setSteps(generated);
+  useEffect(() => {
+    setSteps(generateReversalSteps(nodes));
     setCurrentStepIndex(0);
-    setIsPlaying(false);
-  };
+  }, [nodes]);
 
   useEffect(() => {
-    generateReverseSteps(initialNodes);
-  }, [initialNodes]);
-
-  useEffect(() => {
-    let timer: any = null;
-    if (isPlaying) {
-      const intervalMs = Math.max(350, 1400 / speed);
-      timer = setInterval(() => {
-        setCurrentStepIndex((prev) => {
-          if (prev >= steps.length - 1) {
-            setIsPlaying(false);
-            return prev;
-          }
-          return prev + 1;
-        });
-      }, intervalMs);
-    }
+    if (!isPlaying) return;
+    const timer = setInterval(() => {
+      setCurrentStepIndex((prev) => {
+        if (prev >= steps.length - 1) { setIsPlaying(false); return prev; }
+        return prev + 1;
+      });
+    }, Math.max(500, 1200 / speed));
     return () => clearInterval(timer);
   }, [isPlaying, speed, steps.length]);
 
-  const currentStep = steps[currentStepIndex] || {
-    nodes: initialNodes,
-    reversedPointers: [],
-    prevIndex: -1,
-    currIndex: 0,
-    message: 'Ready',
-    activeLineIndex: 0
-  };
+  const currentStep = steps[currentStepIndex] || { nodes, headIdx: 0, currentIdx: null, prevIdx: null, nextIdx: null, reversed: [], message: 'Ready', activeLineIndex: 0 };
 
   return (
-    <div className="space-y-6">
-      {/* Canvas */}
-      <div className="p-8 bg-slate-950 border border-slate-800 rounded-3xl min-h-[300px] flex flex-col justify-center items-center shadow-2xl relative overflow-x-auto">
-        <div className="flex items-center gap-3 sm:gap-4 min-w-max px-4">
-          {currentStep.nodes.map((val, idx) => {
-            const isPrev = idx === currentStep.prevIndex;
-            const isCurr = idx === currentStep.currIndex;
-            const isReversed = currentStep.reversedPointers.includes(idx);
+    <AlgorithmLab
+      algorithmName="Linked List Reversal"
+      steps={steps}
+      currentStepIndex={currentStepIndex}
+      totalSteps={steps.length}
+      isPlaying={isPlaying}
+      speed={speed}
+      onPlayPause={() => setIsPlaying(!isPlaying)}
+      onStepForward={() => setCurrentStepIndex((p) => Math.min(p + 1, steps.length - 1))}
+      onStepBackward={() => setCurrentStepIndex((p) => Math.max(p - 1, 0))}
+      onRestart={() => { setCurrentStepIndex(0); setIsPlaying(false); }}
+      onSpeedChange={setSpeed}
+      codeLines={LL_CODE}
+      whyExplanation="We reverse a linked list by changing each node's next pointer to point to the previous node instead. Using three pointers (prev, current, next), we can do this in O(n) time with O(1) space — no extra data structure needed."
+      complexityInfo={{ time: 'O(n)', space: 'O(1)' }}
+    >
+      <div className="flex flex-col items-center gap-6">
+        {/* Pointer labels */}
+        <div className="flex items-center gap-4 text-xxs font-medium">
+          <span className="text-accent-violet">prev: {currentStep.prevIdx !== null ? nodes[currentStep.prevIdx] : 'null'}</span>
+          <span className="text-accent">current: {currentStep.currentIdx !== null ? nodes[currentStep.currentIdx] : 'null'}</span>
+          <span className="text-accent-amber">next: {currentStep.nextIdx !== null ? nodes[currentStep.nextIdx] : 'null'}</span>
+        </div>
+
+        {/* Node chain */}
+        <div className="flex items-center gap-0">
+          {nodes.map((val, idx) => {
+            const isCurrent = currentStep.currentIdx === idx;
+            const isPrev = currentStep.prevIdx === idx;
+            const isNext = currentStep.nextIdx === idx;
 
             return (
               <React.Fragment key={idx}>
-                <div className="flex flex-col items-center gap-2">
-                  {/* Top Pointer Badges */}
-                  <div className="h-5 flex items-center gap-1">
-                    {isPrev && (
-                      <span className="text-[10px] font-bold px-1.5 py-0.2 bg-amber-400 text-slate-950 rounded-md">
-                        PREV
-                      </span>
-                    )}
-                    {isCurr && (
-                      <span className="text-[10px] font-bold px-1.5 py-0.2 bg-cyan-400 text-slate-950 rounded-md">
-                        CURR
-                      </span>
-                    )}
+                <div className="flex flex-col items-center gap-1">
+                  {/* Label */}
+                  <div className="h-4 text-xxs font-bold">
+                    {isCurrent && <span className="text-accent">curr</span>}
+                    {isPrev && <span className="text-accent-violet">prev</span>}
+                    {isNext && <span className="text-accent-amber">next</span>}
                   </div>
 
-                  {/* Node Box */}
-                  <div
-                    className={clsx(
-                      'w-16 h-16 rounded-2xl flex flex-col items-center justify-center font-mono font-bold shadow-lg transition-all duration-300',
-                      isCurr
-                        ? 'bg-cyan-500 text-slate-950 ring-2 ring-cyan-300 scale-105 shadow-cyan-500/30'
-                        : isPrev
-                        ? 'bg-amber-400 text-slate-950 shadow-amber-400/30'
-                        : 'bg-slate-900 text-slate-200 border border-slate-700'
-                    )}
-                  >
-                    <span className="text-base">{val}</span>
-                    <span className="text-[9px] opacity-75 font-normal">node</span>
+                  {/* Node box */}
+                  <div className={clsx(
+                    'w-14 h-10 rounded-lg flex items-center justify-center font-mono font-bold text-sm transition-all duration-300 border',
+                    isCurrent ? 'bg-accent text-bg-primary border-accent'
+                      : isPrev ? 'bg-accent-violet/20 text-accent-violet border-accent-violet/40'
+                      : isNext ? 'bg-accent-amber/20 text-accent-amber border-accent-amber/40'
+                      : 'bg-bg-surface text-text-primary border-border-default'
+                  )}>
+                    {val}
                   </div>
-
-                  <span className="text-[10px] font-mono text-slate-500">[{idx}]</span>
                 </div>
 
-                {/* Arrow Connector */}
-                {idx < currentStep.nodes.length - 1 && (
-                  <div className="flex items-center text-slate-600 px-1 transition-transform">
-                    {isReversed ? (
-                      <div className="flex items-center gap-1 text-emerald-400 rotate-180">
-                        <ArrowRight className="w-5 h-5 animate-pulse" />
-                      </div>
-                    ) : (
-                      <ArrowRight className="w-5 h-5 text-slate-600" />
-                    )}
+                {/* Arrow */}
+                {idx < nodes.length - 1 && (
+                  <div className="flex items-center px-1 mt-4">
+                    <div className="w-6 h-0.5 bg-border-strong" />
+                    <div className="w-0 h-0 border-t-[4px] border-t-transparent border-b-[4px] border-b-transparent border-l-[6px] border-l-border-strong" />
                   </div>
                 )}
               </React.Fragment>
             );
           })}
-
-          {/* Null Terminator */}
-          <div className="flex items-center gap-2 pl-2">
-            <ArrowRight className="w-4 h-4 text-slate-700" />
-            <div className="px-3 py-1.5 bg-slate-900 border border-slate-800 text-slate-500 rounded-xl font-mono text-xs">
-              null
-            </div>
+          {/* null */}
+          <div className="flex items-center px-1 mt-4">
+            <div className="w-4 h-0.5 bg-border-subtle" />
+            <span className="text-xxs text-text-disabled ml-1">null</span>
           </div>
         </div>
-      </div>
 
-      {/* Controller */}
-      <VisualizerController
-        currentStep={currentStepIndex}
-        totalSteps={steps.length}
-        isPlaying={isPlaying}
-        speed={speed}
-        onPlayPause={() => setIsPlaying(!isPlaying)}
-        onStepForward={() => setCurrentStepIndex((p) => Math.min(p + 1, steps.length - 1))}
-        onStepBackward={() => setCurrentStepIndex((p) => Math.max(p - 1, 0))}
-        onRestart={() => {
-          setCurrentStepIndex(0);
-          setIsPlaying(false);
-        }}
-        onSpeedChange={setSpeed}
-        statusMessage={currentStep.message}
-        codeLines={REVERSE_LL_CODE}
-        activeLineIndex={currentStep.activeLineIndex}
-      />
-    </div>
+        {/* Reversed so far */}
+        {currentStep.reversed.length > 0 && (
+          <div className="flex items-center gap-1.5">
+            <span className="text-xxs text-text-muted">Reversed:</span>
+            {currentStep.reversed.map((v, i) => (
+              <span key={i} className="badge badge-emerald">{v}</span>
+            ))}
+          </div>
+        )}
+      </div>
+    </AlgorithmLab>
   );
 };

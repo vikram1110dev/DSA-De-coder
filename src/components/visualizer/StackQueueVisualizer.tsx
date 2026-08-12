@@ -1,197 +1,189 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { AlgorithmLab, AlgorithmStep } from './AlgorithmLab';
 import { clsx } from 'clsx';
-import { Layers, ArrowDown, ArrowUp, ArrowRight, CornerDownLeft } from 'lucide-react';
+
+type DSMode = 'stack' | 'queue';
+
+interface DSStep extends AlgorithmStep {
+  elements: number[];
+  topOrFront: number | null;
+  action: 'push' | 'pop' | 'enqueue' | 'dequeue' | 'peek' | 'idle';
+  actionValue?: number;
+}
+
+const STACK_CODE = ['stack = []', 'push(x): stack.append(x)', 'pop(): return stack.pop()', 'peek(): return stack[-1]', 'isEmpty(): return len(stack) == 0'];
+const QUEUE_CODE = ['queue = []', 'enqueue(x): queue.append(x)', 'dequeue(): return queue.pop(0)', 'front(): return queue[0]', 'isEmpty(): return len(queue) == 0'];
+
+const STACK_OPS = [
+  { op: 'push', val: 10 }, { op: 'push', val: 20 }, { op: 'push', val: 30 },
+  { op: 'peek' }, { op: 'pop' }, { op: 'push', val: 40 }, { op: 'pop' }, { op: 'pop' },
+];
+
+const QUEUE_OPS = [
+  { op: 'enqueue', val: 10 }, { op: 'enqueue', val: 20 }, { op: 'enqueue', val: 30 },
+  { op: 'front' }, { op: 'dequeue' }, { op: 'enqueue', val: 40 }, { op: 'dequeue' }, { op: 'dequeue' },
+];
+
+function generateStackSteps(): DSStep[] {
+  const steps: DSStep[] = [];
+  const stack: number[] = [];
+  steps.push({ elements: [], topOrFront: null, action: 'idle', message: 'Stack initialized. LIFO — Last In, First Out.', activeLineIndex: 0 });
+
+  for (const op of STACK_OPS) {
+    if (op.op === 'push' && op.val !== undefined) {
+      stack.push(op.val);
+      steps.push({ elements: [...stack], topOrFront: stack.length - 1, action: 'push', actionValue: op.val, message: `push(${op.val}). Stack: [${stack.join(', ')}]. Top = ${op.val}.`, activeLineIndex: 1 });
+    } else if (op.op === 'pop') {
+      const val = stack.pop();
+      steps.push({ elements: [...stack], topOrFront: stack.length > 0 ? stack.length - 1 : null, action: 'pop', actionValue: val, message: `pop() → ${val}. Stack: [${stack.join(', ')}].`, activeLineIndex: 2 });
+    } else if (op.op === 'peek') {
+      steps.push({ elements: [...stack], topOrFront: stack.length - 1, action: 'peek', actionValue: stack[stack.length - 1], message: `peek() → ${stack[stack.length - 1]}. Stack unchanged.`, activeLineIndex: 3 });
+    }
+  }
+  steps.push({ elements: [...stack], topOrFront: null, action: 'idle', message: `Operations complete. Final stack: [${stack.join(', ')}].`, activeLineIndex: 4 });
+  return steps;
+}
+
+function generateQueueSteps(): DSStep[] {
+  const steps: DSStep[] = [];
+  const queue: number[] = [];
+  steps.push({ elements: [], topOrFront: null, action: 'idle', message: 'Queue initialized. FIFO — First In, First Out.', activeLineIndex: 0 });
+
+  for (const op of QUEUE_OPS) {
+    if (op.op === 'enqueue' && op.val !== undefined) {
+      queue.push(op.val);
+      steps.push({ elements: [...queue], topOrFront: 0, action: 'enqueue', actionValue: op.val, message: `enqueue(${op.val}). Queue: [${queue.join(', ')}]. Front = ${queue[0]}.`, activeLineIndex: 1 });
+    } else if (op.op === 'dequeue') {
+      const val = queue.shift();
+      steps.push({ elements: [...queue], topOrFront: queue.length > 0 ? 0 : null, action: 'dequeue', actionValue: val, message: `dequeue() → ${val}. Queue: [${queue.join(', ')}].`, activeLineIndex: 2 });
+    } else if (op.op === 'front') {
+      steps.push({ elements: [...queue], topOrFront: 0, action: 'peek', actionValue: queue[0], message: `front() → ${queue[0]}. Queue unchanged.`, activeLineIndex: 3 });
+    }
+  }
+  steps.push({ elements: [...queue], topOrFront: null, action: 'idle', message: `Operations complete. Final queue: [${queue.join(', ')}].`, activeLineIndex: 4 });
+  return steps;
+}
 
 export const StackQueueVisualizer: React.FC = () => {
-  const [structure, setStructure] = useState<'stack' | 'queue'>('stack');
-  const [stackItems, setStackItems] = useState<number[]>([10, 20, 30, 40]);
-  const [queueItems, setQueueItems] = useState<number[]>([10, 20, 30, 40]);
-  const [inputValue, setInputValue] = useState<string>('50');
-  const [lastAction, setLastAction] = useState<string>('Ready for operations');
+  const [mode, setMode] = useState<DSMode>('stack');
+  const [steps, setSteps] = useState<DSStep[]>([]);
+  const [currentStepIndex, setCurrentStepIndex] = useState(0);
+  const [isPlaying, setIsPlaying] = useState(false);
+  const [speed, setSpeed] = useState(1);
 
-  const handlePushStack = () => {
-    const val = parseInt(inputValue);
-    if (!isNaN(val) && stackItems.length < 8) {
-      setStackItems([...stackItems, val]);
-      setLastAction(`Pushed ${val} onto top of Stack.`);
-      setInputValue(String(val + 10));
-    }
-  };
+  useEffect(() => {
+    setSteps(mode === 'stack' ? generateStackSteps() : generateQueueSteps());
+    setCurrentStepIndex(0);
+    setIsPlaying(false);
+  }, [mode]);
 
-  const handlePopStack = () => {
-    if (stackItems.length > 0) {
-      const popped = stackItems[stackItems.length - 1];
-      setStackItems(stackItems.slice(0, -1));
-      setLastAction(`Popped ${popped} from top of Stack (LIFO).`);
-    }
-  };
+  useEffect(() => {
+    if (!isPlaying) return;
+    const timer = setInterval(() => {
+      setCurrentStepIndex((prev) => {
+        if (prev >= steps.length - 1) { setIsPlaying(false); return prev; }
+        return prev + 1;
+      });
+    }, Math.max(400, 1000 / speed));
+    return () => clearInterval(timer);
+  }, [isPlaying, speed, steps.length]);
 
-  const handleEnqueue = () => {
-    const val = parseInt(inputValue);
-    if (!isNaN(val) && queueItems.length < 8) {
-      setQueueItems([...queueItems, val]);
-      setLastAction(`Enqueued ${val} at the back of Queue.`);
-      setInputValue(String(val + 10));
-    }
-  };
-
-  const handleDequeue = () => {
-    if (queueItems.length > 0) {
-      const dequeued = queueItems[0];
-      setQueueItems(queueItems.slice(1));
-      setLastAction(`Dequeued ${dequeued} from the front of Queue (FIFO).`);
-    }
-  };
+  const currentStep = steps[currentStepIndex] || { elements: [], topOrFront: null, action: 'idle', message: 'Ready', activeLineIndex: 0 };
 
   return (
-    <div className="space-y-6">
-      {/* Switcher & Controls */}
-      <div className="flex flex-wrap items-center justify-between gap-4 p-4 bg-slate-900 border border-slate-800 rounded-2xl">
-        <div className="flex items-center gap-2">
-          <button
-            onClick={() => setStructure('stack')}
-            className={clsx(
-              'px-4 py-2 text-xs font-bold rounded-xl transition-all',
-              structure === 'stack'
-                ? 'bg-cyan-500 text-slate-950 shadow-md'
-                : 'text-slate-400 hover:text-white bg-slate-800'
+    <div className="space-y-4">
+      <div className="flex items-center gap-1.5 surface p-3">
+        {(['stack', 'queue'] as DSMode[]).map((m) => (
+          <button key={m} onClick={() => setMode(m)}
+            className={clsx('px-3 py-1.5 text-xs font-medium rounded-lg capitalize transition-all',
+              mode === m ? 'bg-accent text-bg-primary' : 'text-text-secondary hover:text-text-primary hover:bg-white/[0.04]'
             )}
           >
-            Stack (LIFO)
+            {m} ({m === 'stack' ? 'LIFO' : 'FIFO'})
           </button>
-          <button
-            onClick={() => setStructure('queue')}
-            className={clsx(
-              'px-4 py-2 text-xs font-bold rounded-xl transition-all',
-              structure === 'queue'
-                ? 'bg-cyan-500 text-slate-950 shadow-md'
-                : 'text-slate-400 hover:text-white bg-slate-800'
-            )}
-          >
-            Queue (FIFO)
-          </button>
-        </div>
+        ))}
+      </div>
 
-        {/* Action Buttons */}
-        <div className="flex items-center gap-2">
-          <input
-            type="number"
-            value={inputValue}
-            onChange={(e) => setInputValue(e.target.value)}
-            className="w-16 bg-slate-950 border border-slate-800 rounded-lg px-2.5 py-1 text-xs text-cyan-300 font-bold focus:outline-none focus:border-cyan-500"
-          />
+      <AlgorithmLab
+        algorithmName={mode === 'stack' ? 'Stack (LIFO)' : 'Queue (FIFO)'}
+        steps={steps}
+        currentStepIndex={currentStepIndex}
+        totalSteps={steps.length}
+        isPlaying={isPlaying}
+        speed={speed}
+        onPlayPause={() => setIsPlaying(!isPlaying)}
+        onStepForward={() => setCurrentStepIndex((p) => Math.min(p + 1, steps.length - 1))}
+        onStepBackward={() => setCurrentStepIndex((p) => Math.max(p - 1, 0))}
+        onRestart={() => { setCurrentStepIndex(0); setIsPlaying(false); }}
+        onSpeedChange={setSpeed}
+        codeLines={mode === 'stack' ? STACK_CODE : QUEUE_CODE}
+        whyExplanation={mode === 'stack' ? 'A Stack follows Last-In-First-Out (LIFO). The last element added is the first removed. Used in function calls, undo operations, expression evaluation, and DFS.' : 'A Queue follows First-In-First-Out (FIFO). The first element added is the first removed. Used in BFS, task scheduling, and message buffers.'}
+        complexityInfo={{ time: 'O(1) per operation', space: 'O(n)' }}
+      >
+        <div className="flex flex-col items-center gap-4">
+          {/* Action indicator */}
+          {currentStep.action !== 'idle' && (
+            <div className="badge badge-amber text-xs">
+              {currentStep.action}({currentStep.actionValue ?? ''})
+            </div>
+          )}
 
-          {structure === 'stack' ? (
-            <>
-              <button
-                onClick={handlePushStack}
-                className="flex items-center gap-1 px-3 py-1.5 text-xs font-bold text-slate-950 bg-emerald-400 hover:bg-emerald-300 rounded-lg transition-colors"
-              >
-                <ArrowDown className="w-3.5 h-3.5" />
-                Push
-              </button>
-              <button
-                onClick={handlePopStack}
-                disabled={stackItems.length === 0}
-                className="flex items-center gap-1 px-3 py-1.5 text-xs font-bold text-slate-950 bg-rose-400 hover:bg-rose-300 disabled:opacity-40 rounded-lg transition-colors"
-              >
-                <ArrowUp className="w-3.5 h-3.5" />
-                Pop
-              </button>
-            </>
+          {mode === 'stack' ? (
+            /* Stack: Vertical, TOP at top */
+            <div className="flex flex-col items-center gap-1 min-h-[160px] justify-end">
+              {currentStep.elements.length === 0 ? (
+                <span className="text-xs text-text-disabled italic">Empty Stack</span>
+              ) : (
+                [...currentStep.elements].reverse().map((val, displayIdx) => {
+                  const realIdx = currentStep.elements.length - 1 - displayIdx;
+                  const isTop = realIdx === currentStep.elements.length - 1;
+                  return (
+                    <div key={`${displayIdx}-${val}`} className="flex items-center gap-2">
+                      <div className={clsx(
+                        'w-20 h-10 rounded-lg flex items-center justify-center font-mono font-bold text-sm border transition-all',
+                        isTop ? 'bg-accent text-bg-primary border-accent' : 'bg-bg-surface text-text-primary border-border-default'
+                      )}>
+                        {val}
+                      </div>
+                      {isTop && <span className="text-xxs font-bold text-accent">← TOP</span>}
+                    </div>
+                  );
+                })
+              )}
+              <div className="w-24 h-0.5 bg-border-strong mt-1" />
+              <span className="text-xxs text-text-disabled">Bottom</span>
+            </div>
           ) : (
-            <>
-              <button
-                onClick={handleEnqueue}
-                className="flex items-center gap-1 px-3 py-1.5 text-xs font-bold text-slate-950 bg-emerald-400 hover:bg-emerald-300 rounded-lg transition-colors"
-              >
-                <ArrowRight className="w-3.5 h-3.5" />
-                Enqueue
-              </button>
-              <button
-                onClick={handleDequeue}
-                disabled={queueItems.length === 0}
-                className="flex items-center gap-1 px-3 py-1.5 text-xs font-bold text-slate-950 bg-rose-400 hover:bg-rose-300 disabled:opacity-40 rounded-lg transition-colors"
-              >
-                <CornerDownLeft className="w-3.5 h-3.5" />
-                Dequeue
-              </button>
-            </>
+            /* Queue: Horizontal, FRONT at left */
+            <div className="flex items-center gap-1 min-h-[80px]">
+              {currentStep.elements.length === 0 ? (
+                <span className="text-xs text-text-disabled italic">Empty Queue</span>
+              ) : (
+                <>
+                  <span className="text-xxs font-bold text-accent mr-1">FRONT →</span>
+                  {currentStep.elements.map((val, idx) => {
+                    const isFront = idx === 0;
+                    const isRear = idx === currentStep.elements.length - 1;
+                    return (
+                      <div key={`${idx}-${val}`} className={clsx(
+                        'w-14 h-12 rounded-lg flex items-center justify-center font-mono font-bold text-sm border transition-all',
+                        isFront ? 'bg-accent text-bg-primary border-accent'
+                          : isRear ? 'bg-accent-emerald/20 text-accent-emerald border-accent-emerald/40'
+                          : 'bg-bg-surface text-text-primary border-border-default'
+                      )}>
+                        {val}
+                      </div>
+                    );
+                  })}
+                  <span className="text-xxs font-bold text-accent-emerald ml-1">← REAR</span>
+                </>
+              )}
+            </div>
           )}
         </div>
-      </div>
-
-      {/* Canvas */}
-      <div className="p-8 bg-slate-950 border border-slate-800 rounded-3xl min-h-[340px] flex flex-col justify-center items-center shadow-2xl relative">
-        {structure === 'stack' ? (
-          <div className="flex flex-col items-center">
-            <span className="text-xs font-bold text-cyan-400 mb-2">▲ Top of Stack (LIFO)</span>
-            <div className="w-48 border-x-2 border-b-2 border-slate-700 p-2 flex flex-col-reverse gap-2 bg-slate-900/40 rounded-b-2xl min-h-[220px]">
-              {stackItems.length === 0 ? (
-                <div className="flex-1 flex items-center justify-center text-slate-600 text-xs italic">
-                  Stack is Empty
-                </div>
-              ) : (
-                stackItems.map((val, idx) => (
-                  <div
-                    key={idx}
-                    className={clsx(
-                      'p-3 rounded-xl font-mono font-bold text-center text-sm shadow-md transition-all animate-in slide-in-from-top-4 duration-200',
-                      idx === stackItems.length - 1
-                        ? 'bg-gradient-to-r from-cyan-500 to-emerald-400 text-slate-950 shadow-cyan-500/20'
-                        : 'bg-slate-800 text-slate-200 border border-slate-700'
-                    )}
-                  >
-                    {val}
-                  </div>
-                ))
-              )}
-            </div>
-          </div>
-        ) : (
-          <div className="flex flex-col items-center w-full max-w-xl">
-            <div className="flex items-center justify-between w-full text-xs font-bold mb-3 px-4">
-              <span className="text-rose-400 flex items-center gap-1">
-                <CornerDownLeft className="w-3.5 h-3.5" /> Front (Dequeue)
-              </span>
-              <span className="text-emerald-400 flex items-center gap-1">
-                Back (Enqueue) <ArrowRight className="w-3.5 h-3.5" />
-              </span>
-            </div>
-
-            <div className="flex items-center gap-3 p-4 bg-slate-900/60 border border-slate-800 rounded-2xl w-full justify-start overflow-x-auto min-h-[90px]">
-              {queueItems.length === 0 ? (
-                <div className="w-full text-center text-slate-600 text-xs italic py-4">
-                  Queue is Empty
-                </div>
-              ) : (
-                queueItems.map((val, idx) => (
-                  <div
-                    key={idx}
-                    className={clsx(
-                      'w-14 h-14 rounded-2xl flex items-center justify-center font-mono font-bold text-sm shadow-md transition-all animate-in slide-in-from-right-4 duration-200 shrink-0',
-                      idx === 0
-                        ? 'bg-gradient-to-r from-rose-500 to-amber-400 text-slate-950 ring-2 ring-rose-300'
-                        : idx === queueItems.length - 1
-                        ? 'bg-emerald-400 text-slate-950'
-                        : 'bg-slate-800 text-slate-200 border border-slate-700'
-                    )}
-                  >
-                    {val}
-                  </div>
-                ))
-              )}
-            </div>
-          </div>
-        )}
-
-        {/* Action log message */}
-        <div className="mt-8 text-xs font-semibold text-slate-400 bg-slate-900 border border-slate-800 px-4 py-2 rounded-xl">
-          Operation: <span className="text-cyan-300">{lastAction}</span>
-        </div>
-      </div>
+      </AlgorithmLab>
     </div>
   );
 };

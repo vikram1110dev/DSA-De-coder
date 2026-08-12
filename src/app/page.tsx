@@ -3,230 +3,165 @@
 import React from 'react';
 import Link from 'next/link';
 import {
-  Sparkles,
-  ArrowRight,
-  Eye,
-  Cpu,
-  Flame,
-  CheckCircle2,
-  Layers,
-  Code2,
-  Compass,
-  Calendar,
-  Activity,
-  Bot
+  Sparkles, ArrowRight, Eye, Cpu, Flame, Activity, Code2, Calendar, Bot
 } from 'lucide-react';
 
 export default function LandingPage() {
   return (
-    <div className="min-h-screen bg-[#080d1a] text-slate-100 selection:bg-cyan-500/30">
-      {/* Top Floating Navbar */}
-      <header className="sticky top-0 z-50 flex items-center justify-between px-6 sm:px-12 py-4 backdrop-blur-md bg-[#080d1a]/80 border-b border-slate-800/80">
+    <div className="min-h-screen bg-bg-primary text-text-primary">
+      {/* Navbar */}
+      <header className="sticky top-0 z-50 flex items-center justify-between px-6 sm:px-12 py-3.5 backdrop-blur-lg bg-bg-primary/80 border-b border-border-subtle">
         <Link href="/" className="flex items-center gap-2.5 group">
-          <div className="w-9 h-9 rounded-xl bg-gradient-to-tr from-cyan-600 via-cyan-500 to-emerald-400 text-slate-950 flex items-center justify-center font-black shadow-lg shadow-cyan-500/20 group-hover:scale-105 transition-transform">
-            <Sparkles className="w-5 h-5 text-slate-950" />
+          <div className="w-8 h-8 rounded-lg bg-accent flex items-center justify-center group-hover:shadow-glow-cyan transition-shadow">
+            <Sparkles className="w-4 h-4 text-bg-primary" />
           </div>
-          <span className="text-lg font-black tracking-tight text-white">
-            DSA <span className="text-cyan-400">De-coder</span>
+          <span className="text-base font-bold tracking-tight">
+            DSA <span className="text-accent">De-coder</span>
           </span>
         </Link>
 
         <div className="flex items-center gap-3">
-          <Link
-            href="/dashboard"
-            className="px-4 py-2 text-xs font-bold text-slate-300 hover:text-white transition-colors"
-          >
+          <Link href="/dashboard" className="text-xs font-medium text-text-secondary hover:text-text-primary transition-colors">
             Dashboard
           </Link>
           <Link
             href="/onboarding"
-            className="flex items-center gap-2 px-5 py-2.5 text-xs font-bold text-slate-950 bg-gradient-to-r from-cyan-400 via-teal-400 to-emerald-400 hover:opacity-95 rounded-xl transition-all shadow-md shadow-cyan-500/20"
+            className="btn-primary text-xs"
           >
-            <span>Start Learning Free</span>
+            Start Learning
             <ArrowRight className="w-3.5 h-3.5" />
           </Link>
         </div>
       </header>
 
-      {/* Hero Section */}
-      <section className="relative pt-20 pb-16 sm:pt-28 sm:pb-24 px-4 sm:px-6 max-w-6xl mx-auto text-center space-y-8">
-        {/* Glow backdrop */}
-        <div className="absolute top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[300px] bg-cyan-500/15 blur-[120px] rounded-full pointer-events-none" />
+      {/* Hero */}
+      <section className="relative pt-20 pb-16 sm:pt-28 sm:pb-24 px-4 sm:px-6 max-w-5xl mx-auto text-center space-y-6">
+        <div className="absolute top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[250px] bg-accent/10 blur-[120px] rounded-full pointer-events-none" />
 
-        {/* Badge Pill */}
-        <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-slate-900 border border-cyan-500/30 text-xs font-bold text-cyan-300 shadow-sm animate-pulse-glow">
-          <Sparkles className="w-4 h-4 text-cyan-400" />
-          <span>Don't memorize DSA. Understand it.</span>
+        <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-bg-surface border border-accent/20 text-xxs font-semibold text-accent">
+          <Sparkles className="w-3.5 h-3.5" />
+          Don't memorize DSA. Understand it.
         </div>
 
-        {/* Main Title */}
-        <h1 className="text-4xl sm:text-6xl lg:text-7xl font-black text-white tracking-tight max-w-4xl mx-auto leading-[1.1]">
+        <h1 className="text-4xl sm:text-6xl font-black tracking-tight max-w-3xl mx-auto leading-[1.1]">
           Master DSA by{' '}
-          <span className="gradient-text-cyan">Decoding the Logic.</span>
+          <span className="text-gradient-brand">Decoding the Logic.</span>
         </h1>
 
-        {/* Description */}
-        <p className="text-base sm:text-lg text-slate-300 max-w-2xl mx-auto leading-relaxed">
-          Learn Data Structures & Algorithms through visual step-by-step simulations, guided problem decoding, personalized study plans, and an AI mentor that explains the <strong className="text-cyan-300 font-bold">"why"</strong> behind every solution.
+        <p className="text-sm sm:text-base text-text-secondary max-w-2xl mx-auto leading-relaxed">
+          Learn algorithms through visual step-by-step simulations, guided problem decoding,
+          and an AI mentor that explains the <strong className="text-accent font-semibold">"why"</strong> behind every solution.
         </p>
 
-        {/* Hero CTA Buttons */}
-        <div className="flex flex-wrap items-center justify-center gap-4 pt-4">
-          <Link
-            href="/onboarding"
-            className="flex items-center gap-2 px-8 py-4 text-sm font-bold text-slate-950 bg-gradient-to-r from-cyan-400 via-teal-400 to-emerald-400 hover:opacity-95 rounded-2xl transition-all shadow-xl shadow-cyan-500/25 group"
-          >
-            <span>Start Learning</span>
+        <div className="flex flex-wrap items-center justify-center gap-3 pt-2">
+          <Link href="/onboarding" className="btn-primary px-6 py-3 text-sm group">
+            Start Learning
             <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
           </Link>
-
-          <Link
-            href="/ai-decoder"
-            className="flex items-center gap-2 px-8 py-4 text-sm font-bold text-slate-200 hover:text-white bg-slate-900 hover:bg-slate-850 border border-slate-800 rounded-2xl transition-all shadow-lg"
-          >
-            <Cpu className="w-4 h-4 text-cyan-400" />
-            <span>Try AI De-coder</span>
+          <Link href="/ai-decoder" className="btn-secondary px-6 py-3 text-sm">
+            <Cpu className="w-4 h-4 text-accent" />
+            Try AI De-coder
           </Link>
         </div>
 
-        {/* Interactive App Preview Window */}
-        <div className="mt-12 p-2 bg-slate-900/60 border border-slate-800 rounded-3xl shadow-2xl backdrop-blur-md max-w-5xl mx-auto overflow-hidden">
-          <div className="p-6 bg-slate-950 rounded-2xl border border-slate-800/80 space-y-4 text-left">
-            <div className="flex items-center justify-between border-b border-slate-800 pb-4">
-              <div className="flex items-center gap-2">
-                <span className="w-3 h-3 rounded-full bg-rose-500/80" />
-                <span className="w-3 h-3 rounded-full bg-amber-500/80" />
-                <span className="w-3 h-3 rounded-full bg-emerald-500/80" />
-                <span className="text-xs font-mono text-slate-500 ml-2">
-                  dsa-decoder.app/dashboard
-                </span>
+        {/* Preview window */}
+        <div className="mt-10 surface p-1.5 max-w-4xl mx-auto shadow-elevation-4">
+          <div className="surface-inset p-5 space-y-4 text-left">
+            <div className="flex items-center justify-between border-b border-border-subtle pb-3">
+              <div className="flex items-center gap-1.5">
+                <span className="w-2.5 h-2.5 rounded-full bg-accent-rose/60" />
+                <span className="w-2.5 h-2.5 rounded-full bg-accent-amber/60" />
+                <span className="w-2.5 h-2.5 rounded-full bg-state-success/60" />
+                <span className="text-xxs font-mono text-text-muted ml-2">dsa-decoder/dashboard</span>
               </div>
-              <div className="flex items-center gap-2 text-xs font-bold text-amber-400">
-                <Flame className="w-4 h-4 fill-amber-400" />
-                <span>12 Day Streak</span>
+              <div className="flex items-center gap-1.5 text-xxs font-semibold text-accent-amber">
+                <Flame className="w-3.5 h-3.5 fill-accent-amber" />
+                12 Day Streak
               </div>
             </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 pt-2">
-              <div className="p-4 bg-slate-900 border border-slate-800 rounded-2xl space-y-1">
-                <div className="text-[11px] text-slate-400 font-bold">Continue Learning:</div>
-                <div className="text-sm font-bold text-white">Sliding Window Technique</div>
-                <div className="text-xs text-cyan-400 font-mono">68% completed</div>
-              </div>
-
-              <div className="p-4 bg-slate-900 border border-slate-800 rounded-2xl space-y-1">
-                <div className="text-[11px] text-slate-400 font-bold">AI Weak-Area Radar:</div>
-                <div className="text-sm font-bold text-white">Graphs (42%) & DP (38%)</div>
-                <div className="text-xs text-emerald-400 font-mono">Arrays: 86% Mastered</div>
-              </div>
-
-              <div className="p-4 bg-slate-900 border border-slate-800 rounded-2xl space-y-1">
-                <div className="text-[11px] text-slate-400 font-bold">Next Smart Reminder:</div>
-                <div className="text-sm font-bold text-white">Today • 7:00 PM</div>
-                <div className="text-xs text-indigo-400 font-mono">Binary Search Revision</div>
-              </div>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+              {[
+                { label: 'Continue Learning', title: 'Sliding Window', detail: '68% completed', color: 'text-accent' },
+                { label: 'Weak Areas', title: 'Graphs (42%) & DP (38%)', detail: 'Arrays: 86% mastered', color: 'text-accent-amber' },
+                { label: 'Next Reminder', title: 'Today • 7:00 PM', detail: 'Binary Search Revision', color: 'text-accent-violet' },
+              ].map((card) => (
+                <div key={card.label} className="surface p-3.5 space-y-1">
+                  <div className="text-xxs text-text-muted font-medium">{card.label}</div>
+                  <div className="text-xs font-bold text-text-primary">{card.title}</div>
+                  <div className={`text-xxs font-mono ${card.color}`}>{card.detail}</div>
+                </div>
+              ))}
             </div>
           </div>
         </div>
       </section>
 
-      {/* The 7-Step Learning Philosophy */}
-      <section className="py-20 px-6 bg-slate-950/60 border-y border-slate-800/80">
-        <div className="max-w-6xl mx-auto space-y-12 text-center">
+      {/* 7-Step Framework */}
+      <section className="py-16 px-6 border-y border-border-subtle bg-bg-secondary/40">
+        <div className="max-w-5xl mx-auto space-y-10 text-center">
           <div>
-            <span className="text-xs font-extrabold uppercase tracking-widest text-cyan-400">
-              Our Core Learning Framework
-            </span>
-            <h2 className="text-3xl sm:text-4xl font-extrabold text-white mt-2">
-              The 7-Step Mastery Loop
-            </h2>
-            <p className="text-xs sm:text-sm text-slate-400 mt-2 max-w-xl mx-auto">
-              How thousands of students build permanent algorithm intuition instead of rote syntax memorization.
-            </p>
+            <span className="text-xxs font-bold uppercase tracking-widest text-accent">Learning Framework</span>
+            <h2 className="text-2xl sm:text-3xl font-bold text-text-primary mt-2">The 7-Step Mastery Loop</h2>
+            <p className="text-xs text-text-muted mt-1.5 max-w-md mx-auto">Build permanent algorithm intuition instead of rote memorization.</p>
           </div>
 
-          <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-7 gap-3">
+          <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-7 gap-2">
             {[
-              { step: '1', title: 'Understand', desc: 'Real-world intuition & why it exists' },
-              { step: '2', title: 'Visualize', desc: 'Interactive step-by-step simulations' },
-              { step: '3', title: 'Decode', desc: '5-step problem analysis before coding' },
-              { step: '4', title: 'Practice', desc: 'Multi-language sandboxed IDE' },
-              { step: '5', title: 'Solve', desc: 'Progressive hints & test cases' },
-              { step: '6', title: 'Review', desc: 'AI mentor feedback & complexity' },
-              { step: '7', title: 'Master', desc: 'Streak, spaced revision & XP' },
+              { step: '1', title: 'Understand', desc: 'Real-world intuition' },
+              { step: '2', title: 'Visualize', desc: 'Step-by-step simulation' },
+              { step: '3', title: 'Decode', desc: 'Pattern analysis' },
+              { step: '4', title: 'Practice', desc: 'Sandboxed IDE' },
+              { step: '5', title: 'Solve', desc: 'Hints & test cases' },
+              { step: '6', title: 'Review', desc: 'AI feedback' },
+              { step: '7', title: 'Master', desc: 'Streak & revision' },
             ].map((s) => (
-              <div
-                key={s.step}
-                className="p-4 rounded-2xl bg-slate-900 border border-slate-800 text-left space-y-2 hover:border-cyan-500/40 transition-colors group"
-              >
-                <div className="w-7 h-7 rounded-xl bg-cyan-500/20 text-cyan-400 flex items-center justify-center font-mono font-bold text-xs group-hover:scale-110 transition-transform">
+              <div key={s.step} className="surface-interactive p-3 text-left space-y-1.5">
+                <div className="w-6 h-6 rounded-md bg-accent-muted text-accent flex items-center justify-center font-mono text-xxs font-bold">
                   {s.step}
                 </div>
-                <div className="text-xs font-bold text-white">{s.title}</div>
-                <div className="text-[11px] text-slate-400 leading-tight">{s.desc}</div>
+                <div className="text-xs font-semibold text-text-primary">{s.title}</div>
+                <div className="text-xxs text-text-muted leading-tight">{s.desc}</div>
               </div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* Major Features Grid */}
-      <section className="py-20 px-6 max-w-6xl mx-auto space-y-12">
-        <div className="text-center space-y-2">
-          <span className="text-xs font-extrabold uppercase tracking-widest text-cyan-400">
-            Everything You Need
-          </span>
-          <h2 className="text-3xl sm:text-4xl font-extrabold text-white">
-            Built for Placement & Interview Success
-          </h2>
+      {/* Features */}
+      <section className="py-16 px-6 max-w-5xl mx-auto space-y-10">
+        <div className="text-center">
+          <span className="text-xxs font-bold uppercase tracking-widest text-accent">Features</span>
+          <h2 className="text-2xl sm:text-3xl font-bold text-text-primary mt-2">Built for Interview Success</h2>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          <div className="p-6 rounded-3xl bg-slate-900 border border-slate-800 space-y-3">
-            <div className="w-10 h-10 rounded-2xl bg-cyan-500/20 text-cyan-400 flex items-center justify-center">
-              <Eye className="w-5 h-5" />
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          {[
+            { icon: Eye, title: 'Interactive Visualizers', desc: '8 algorithm categories with step control, custom inputs, and code highlighting.', color: 'text-accent' },
+            { icon: Cpu, title: 'AI DSA De-coder', desc: 'Gemini-powered 10-section breakdown: pattern, brute force vs optimal, dry run, code.', color: 'text-accent-emerald' },
+            { icon: Activity, title: '365-Day Heatmap', desc: 'GitHub-style contribution tracking, streak protection, and milestone badges.', color: 'text-accent-amber' },
+            { icon: Code2, title: 'Practice IDE', desc: '50+ curated problems with multi-language editor, hints, and automated test runner.', color: 'text-accent-violet' },
+            { icon: Calendar, title: 'Smart Planner', desc: 'AI-generated daily study tasks with reminders, quiet hours, and progress tracking.', color: 'text-accent-rose' },
+            { icon: Bot, title: 'AI Mentor Chat', desc: 'Ask questions in natural language. Get concept explanations, debugging help, and guidance.', color: 'text-accent-blue' },
+          ].map((feat) => (
+            <div key={feat.title} className="surface-interactive p-5 space-y-2.5">
+              <feat.icon className={`w-5 h-5 ${feat.color}`} />
+              <h3 className="text-sm font-bold text-text-primary">{feat.title}</h3>
+              <p className="text-xxs text-text-muted leading-relaxed">{feat.desc}</p>
             </div>
-            <h3 className="text-base font-bold text-white">Interactive Visualizers</h3>
-            <p className="text-xs text-slate-400 leading-relaxed">
-              Step through Arrays, Sorting, Binary Search, Trees, Graphs (BFS/DFS), and Dynamic Programming with custom inputs, speed control, and line highlights.
-            </p>
-          </div>
-
-          <div className="p-6 rounded-3xl bg-slate-900 border border-slate-800 space-y-3">
-            <div className="w-10 h-10 rounded-2xl bg-emerald-500/20 text-emerald-400 flex items-center justify-center">
-              <Cpu className="w-5 h-5" />
-            </div>
-            <h3 className="text-base font-bold text-white">AI DSA De-coder</h3>
-            <p className="text-xs text-slate-400 leading-relaxed">
-              Input any question. Gemini analyzes clues, detects patterns, provides brute force vs optimal trade-offs, dry runs, and line-by-line code.
-            </p>
-          </div>
-
-          <div className="p-6 rounded-3xl bg-slate-900 border border-slate-800 space-y-3">
-            <div className="w-10 h-10 rounded-2xl bg-amber-500/20 text-amber-400 flex items-center justify-center">
-              <Activity className="w-5 h-5" />
-            </div>
-            <h3 className="text-base font-bold text-white">365-Day Activity Heatmap</h3>
-            <p className="text-xs text-slate-400 leading-relaxed">
-              Original contribution heatmap recording only meaningful DSA completions. Track your streak, freeze safeguards, and earn milestone badges.
-            </p>
-          </div>
+          ))}
         </div>
       </section>
 
-      {/* Final Call to Action */}
-      <section className="py-20 px-6 bg-gradient-to-b from-slate-900 to-[#080d1a] border-t border-slate-800 text-center space-y-6">
-        <h2 className="text-3xl sm:text-5xl font-black text-white">
+      {/* CTA */}
+      <section className="py-16 px-6 border-t border-border-subtle text-center space-y-4">
+        <h2 className="text-2xl sm:text-4xl font-black text-text-primary">
           Start decoding DSA today.
         </h2>
-        <p className="text-sm text-slate-400 max-w-lg mx-auto">
-          Join thousands of developers and placement students mastering algorithms through logic and intuition.
+        <p className="text-sm text-text-muted max-w-md mx-auto">
+          Join developers mastering algorithms through logic, visualization, and AI guidance.
         </p>
-        <Link
-          href="/onboarding"
-          className="inline-flex items-center gap-2 px-8 py-4 text-sm font-bold text-slate-950 bg-gradient-to-r from-cyan-400 via-teal-400 to-emerald-400 hover:opacity-95 rounded-2xl transition-all shadow-xl shadow-cyan-500/20"
-        >
-          <span>Get Your Personalized Study Plan</span>
+        <Link href="/onboarding" className="btn-primary px-6 py-3 text-sm inline-flex">
+          Get Your Study Plan
           <ArrowRight className="w-4 h-4" />
         </Link>
       </section>

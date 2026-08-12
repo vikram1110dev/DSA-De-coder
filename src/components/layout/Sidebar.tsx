@@ -1,6 +1,6 @@
 'use client';
 
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import {
@@ -19,8 +19,9 @@ import {
   StickyNote,
   Settings,
   Sparkles,
-  ChevronRight,
   Flame,
+  PanelLeftClose,
+  PanelLeft,
   X
 } from 'lucide-react';
 import { clsx } from 'clsx';
@@ -28,155 +29,208 @@ import { clsx } from 'clsx';
 interface SidebarProps {
   isOpen?: boolean;
   onClose?: () => void;
+  isCollapsed?: boolean;
+  onToggleCollapse?: () => void;
   streakCount?: number;
 }
 
-const NAV_ITEMS = [
-  { name: 'Dashboard', href: '/dashboard', icon: LayoutDashboard },
-  { name: 'Learn DSA', href: '/learn', icon: BookOpen },
-  { name: 'Roadmap', href: '/roadmap', icon: Milestone },
-  { name: 'Visualizer', href: '/visualizer', icon: Eye, badge: 'Interactive' },
-  { name: 'Practice', href: '/practice', icon: Code2, badge: '50+ Labs' },
-  { name: 'AI De-coder', href: '/ai-decoder', icon: Cpu, badge: 'Gemini' },
-  { name: 'AI Mentor Chat', href: '/ai-chat', icon: MessageSquareCode },
-  { name: 'Study Planner', href: '/planner', icon: CalendarDays },
-  { name: 'Reminders', href: '/reminders', icon: Bell },
-  { name: 'Progress & Heatmap', href: '/progress', icon: Activity },
-  { name: 'Achievements', href: '/achievements', icon: Award },
-  { name: 'Bookmarks', href: '/bookmarks', icon: Bookmark },
-  { name: 'Notes', href: '/notes', icon: StickyNote },
-  { name: 'Settings', href: '/settings', icon: Settings },
+interface NavSection {
+  label: string;
+  items: { name: string; href: string; icon: any }[];
+}
+
+const NAV_SECTIONS: NavSection[] = [
+  {
+    label: 'LEARN',
+    items: [
+      { name: 'Dashboard', href: '/dashboard', icon: LayoutDashboard },
+      { name: 'Roadmap', href: '/roadmap', icon: Milestone },
+      { name: 'Learn DSA', href: '/learn', icon: BookOpen },
+      { name: 'Visualizer', href: '/visualizer', icon: Eye },
+    ],
+  },
+  {
+    label: 'PRACTICE',
+    items: [
+      { name: 'Problems', href: '/practice', icon: Code2 },
+      { name: 'AI De-coder', href: '/ai-decoder', icon: Cpu },
+      { name: 'AI Chat', href: '/ai-chat', icon: MessageSquareCode },
+    ],
+  },
+  {
+    label: 'PLAN',
+    items: [
+      { name: 'Study Planner', href: '/planner', icon: CalendarDays },
+      { name: 'Reminders', href: '/reminders', icon: Bell },
+    ],
+  },
+  {
+    label: 'PROGRESS',
+    items: [
+      { name: 'Progress', href: '/progress', icon: Activity },
+      { name: 'Achievements', href: '/achievements', icon: Award },
+    ],
+  },
+  {
+    label: 'PERSONAL',
+    items: [
+      { name: 'Bookmarks', href: '/bookmarks', icon: Bookmark },
+      { name: 'Notes', href: '/notes', icon: StickyNote },
+    ],
+  },
 ];
 
-export const Sidebar: React.FC<SidebarProps> = ({ isOpen = false, onClose, streakCount = 12 }) => {
+export const Sidebar: React.FC<SidebarProps> = ({
+  isOpen = false,
+  onClose,
+  isCollapsed = false,
+  onToggleCollapse,
+  streakCount = 12,
+}) => {
   const pathname = usePathname();
 
   return (
     <>
-      {/* Mobile Backdrop */}
+      {/* Mobile backdrop */}
       {isOpen && (
         <div
-          className="fixed inset-0 z-40 bg-black/70 backdrop-blur-sm lg:hidden transition-opacity"
+          className="fixed inset-0 z-40 bg-black/60 backdrop-blur-sm lg:hidden"
           onClick={onClose}
         />
       )}
 
       <aside
         className={clsx(
-          'fixed top-0 bottom-0 left-0 z-50 flex flex-col w-64 bg-[#090d16] border-r border-slate-800/80 transition-transform duration-300 ease-in-out lg:translate-x-0',
-          isOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'
+          'fixed top-0 bottom-0 left-0 z-50 flex flex-col bg-bg-secondary transition-all duration-200 ease-out',
+          'border-r border-border-default',
+          // Desktop: show based on collapse state
+          'lg:translate-x-0',
+          isCollapsed ? 'lg:w-sidebar-collapsed' : 'lg:w-sidebar',
+          // Mobile: slide in/out, always full width
+          isOpen ? 'translate-x-0 w-sidebar' : '-translate-x-full lg:translate-x-0'
         )}
       >
-        {/* Brand Header */}
-        <div className="flex items-center justify-between h-16 px-4 border-b border-slate-800/80 bg-slate-950/40">
-          <Link href="/dashboard" className="flex items-center gap-2.5 group">
-            <div className="flex items-center justify-center w-9 h-9 rounded-xl bg-gradient-to-tr from-cyan-600 via-cyan-500 to-emerald-400 text-slate-950 font-black shadow-lg shadow-cyan-500/20 group-hover:scale-105 transition-transform">
-              <Sparkles className="w-5 h-5 text-slate-950" />
+        {/* Brand header */}
+        <div className="flex items-center h-14 px-3 border-b border-border-subtle shrink-0">
+          <Link href="/dashboard" className="flex items-center gap-2.5 min-w-0 group">
+            <div className="w-8 h-8 rounded-lg bg-accent flex items-center justify-center shrink-0 group-hover:shadow-glow-cyan transition-shadow">
+              <Sparkles className="w-4 h-4 text-bg-primary" />
             </div>
-            <div>
-              <span className="text-base font-bold tracking-tight text-white flex items-center gap-1">
-                DSA <span className="text-cyan-400">De-coder</span>
+            {!isCollapsed && (
+              <span className="text-sm font-bold text-text-primary tracking-tight truncate">
+                DSA <span className="text-accent">De-coder</span>
               </span>
-              <span className="block text-[10px] text-slate-400 font-medium tracking-wider uppercase">
-                AI Learning Platform
-              </span>
-            </div>
+            )}
           </Link>
 
+          {/* Close on mobile */}
           {onClose && (
             <button
               onClick={onClose}
-              className="p-1.5 text-slate-400 hover:text-white rounded-lg lg:hidden hover:bg-slate-800"
-              aria-label="Close Sidebar"
+              className="p-1 text-text-muted hover:text-text-primary rounded-md lg:hidden ml-auto"
+              aria-label="Close navigation"
             >
-              <X className="w-5 h-5" />
+              <X className="w-4 h-4" />
             </button>
           )}
         </div>
 
-        {/* Streak Quick Card */}
-        <div className="px-3.5 py-3 border-b border-slate-800/60 bg-gradient-to-r from-amber-500/10 via-orange-500/5 to-transparent">
-          <Link
-            href="/progress"
-            className="flex items-center justify-between p-2.5 rounded-xl bg-slate-900/80 border border-amber-500/20 hover:border-amber-500/40 transition-colors group"
-          >
-            <div className="flex items-center gap-2.5">
-              <div className="flex items-center justify-center w-8 h-8 rounded-lg bg-amber-500/20 text-amber-400 group-hover:scale-110 transition-transform">
-                <Flame className="w-5 h-5 fill-amber-400 text-amber-500 animate-pulse" />
-              </div>
-              <div>
-                <div className="text-xs font-bold text-slate-200">
-                  {streakCount} Day Streak
+        {/* Navigation sections */}
+        <nav className="flex-1 overflow-y-auto py-3 px-2 space-y-5" style={{ scrollbarWidth: 'thin' }}>
+          {NAV_SECTIONS.map((section) => (
+            <div key={section.label}>
+              {/* Section label */}
+              {!isCollapsed && (
+                <div className="px-2 mb-1.5 text-xxs font-semibold text-text-muted tracking-widest uppercase">
+                  {section.label}
                 </div>
-                <div className="text-[11px] text-amber-400/90 font-medium">
-                  Active & Protected 🔥
-                </div>
+              )}
+              {isCollapsed && (
+                <div className="w-full h-px bg-border-subtle my-2" />
+              )}
+
+              <div className="space-y-0.5">
+                {section.items.map((item) => {
+                  const Icon = item.icon;
+                  const isActive = pathname === item.href || pathname.startsWith(item.href + '/');
+
+                  return (
+                    <Link
+                      key={item.href}
+                      href={item.href}
+                      onClick={onClose}
+                      title={isCollapsed ? item.name : undefined}
+                      className={clsx(
+                        'flex items-center gap-2.5 rounded-lg transition-colors relative group',
+                        isCollapsed ? 'justify-center p-2.5' : 'px-2.5 py-2',
+                        isActive
+                          ? 'bg-accent-muted text-accent'
+                          : 'text-text-secondary hover:text-text-primary hover:bg-white/[0.04]'
+                      )}
+                    >
+                      <Icon
+                        className={clsx(
+                          'w-4 h-4 shrink-0',
+                          isActive ? 'text-accent' : 'text-text-muted group-hover:text-text-secondary'
+                        )}
+                      />
+                      {!isCollapsed && (
+                        <span className="text-xs font-medium truncate">{item.name}</span>
+                      )}
+
+                      {/* Active indicator */}
+                      {isActive && (
+                        <div className="absolute left-0 top-1/2 -translate-y-1/2 w-0.5 h-4 bg-accent rounded-r" />
+                      )}
+
+                      {/* Collapsed tooltip */}
+                      {isCollapsed && (
+                        <div className="absolute left-full ml-2 px-2 py-1 bg-bg-elevated border border-border-default rounded-md text-xs font-medium text-text-primary whitespace-nowrap opacity-0 pointer-events-none group-hover:opacity-100 transition-opacity z-50 shadow-elevation-2">
+                          {item.name}
+                        </div>
+                      )}
+                    </Link>
+                  );
+                })}
               </div>
             </div>
-            <ChevronRight className="w-4 h-4 text-slate-500 group-hover:text-amber-400 transition-colors" />
-          </Link>
-        </div>
-
-        {/* Navigation Links */}
-        <nav className="flex-1 px-3 py-3 space-y-1 overflow-y-auto custom-scrollbar">
-          {NAV_ITEMS.map((item) => {
-            const Icon = item.icon;
-            const isActive = pathname === item.href || pathname.startsWith(item.href + '/');
-
-            return (
-              <Link
-                key={item.href}
-                href={item.href}
-                onClick={onClose}
-                className={clsx(
-                  'flex items-center justify-between px-3 py-2.5 rounded-xl text-xs font-semibold transition-all group',
-                  isActive
-                    ? 'bg-gradient-to-r from-cyan-500/15 to-cyan-500/5 text-cyan-300 border border-cyan-500/30 shadow-sm shadow-cyan-500/10'
-                    : 'text-slate-400 hover:text-slate-100 hover:bg-slate-800/60'
-                )}
-              >
-                <div className="flex items-center gap-3">
-                  <Icon
-                    className={clsx(
-                      'w-4 h-4 transition-transform group-hover:scale-110',
-                      isActive ? 'text-cyan-400' : 'text-slate-400 group-hover:text-slate-200'
-                    )}
-                  />
-                  <span>{item.name}</span>
-                </div>
-
-                {item.badge && (
-                  <span
-                    className={clsx(
-                      'text-[10px] px-1.5 py-0.5 rounded-full font-bold',
-                      item.badge === 'Gemini'
-                        ? 'bg-gradient-to-r from-cyan-500/20 to-purple-500/20 text-cyan-300 border border-cyan-500/30'
-                        : 'bg-slate-800 text-slate-300'
-                    )}
-                  >
-                    {item.badge}
-                  </span>
-                )}
-              </Link>
-            );
-          })}
+          ))}
         </nav>
 
-        {/* User Footer Card */}
-        <div className="p-3 border-t border-slate-800/80 bg-slate-950/40">
+        {/* Bottom section: collapse toggle + settings */}
+        <div className="border-t border-border-subtle p-2 space-y-1 shrink-0">
+          {/* Settings */}
           <Link
             href="/settings"
-            className="flex items-center gap-3 p-2 rounded-xl hover:bg-slate-800/60 transition-colors"
+            className={clsx(
+              'flex items-center gap-2.5 rounded-lg text-text-secondary hover:text-text-primary hover:bg-white/[0.04] transition-colors',
+              isCollapsed ? 'justify-center p-2.5' : 'px-2.5 py-2'
+            )}
           >
-            <div className="w-8 h-8 rounded-full bg-gradient-to-tr from-cyan-500 to-indigo-600 flex items-center justify-center text-sm font-bold text-white shadow-md">
-              V
-            </div>
-            <div className="flex-1 min-w-0">
-              <p className="text-xs font-bold text-white truncate">Vikram</p>
-              <p className="text-[10px] text-cyan-400 font-medium truncate">Level 3 • 480 XP</p>
-            </div>
-            <Settings className="w-4 h-4 text-slate-500 hover:text-slate-300" />
+            <Settings className="w-4 h-4 text-text-muted shrink-0" />
+            {!isCollapsed && <span className="text-xs font-medium">Settings</span>}
           </Link>
+
+          {/* Collapse toggle (desktop only) */}
+          {onToggleCollapse && (
+            <button
+              onClick={onToggleCollapse}
+              className={clsx(
+                'hidden lg:flex items-center gap-2.5 w-full rounded-lg text-text-muted hover:text-text-secondary hover:bg-white/[0.04] transition-colors',
+                isCollapsed ? 'justify-center p-2.5' : 'px-2.5 py-2'
+              )}
+              title={isCollapsed ? 'Expand sidebar' : 'Collapse sidebar'}
+            >
+              {isCollapsed ? (
+                <PanelLeft className="w-4 h-4" />
+              ) : (
+                <>
+                  <PanelLeftClose className="w-4 h-4" />
+                  <span className="text-xs font-medium">Collapse</span>
+                </>
+              )}
+            </button>
+          )}
         </div>
       </aside>
     </>

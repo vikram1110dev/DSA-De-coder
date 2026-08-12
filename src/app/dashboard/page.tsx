@@ -12,14 +12,14 @@ import {
   Clock,
   ArrowRight,
   Sparkles,
-  Bell,
   BookOpen,
   Eye,
   Code2,
-  Cpu,
   BarChart3,
-  Award,
-  Circle
+  Circle,
+  Target,
+  TrendingUp,
+  Zap
 } from 'lucide-react';
 import { clsx } from 'clsx';
 
@@ -45,235 +45,215 @@ export default function DashboardPage() {
   };
 
   const completedTasks = tasks.filter((t) => t.isCompleted).length;
+  const completionPct = Math.round((completedTasks / Math.max(tasks.length, 1)) * 100);
+
+  // Get time-based greeting
+  const getGreeting = () => {
+    const h = new Date().getHours();
+    if (h < 12) return 'Good morning';
+    if (h < 17) return 'Good afternoon';
+    return 'Good evening';
+  };
 
   return (
     <AppLayout>
-      <div className="space-y-8">
-        {/* Top Greeting & AI Recommendation Banner */}
-        <div className="p-6 sm:p-8 bg-gradient-to-r from-cyan-950/40 via-slate-900 to-indigo-950/30 border border-cyan-500/20 rounded-3xl shadow-xl flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
-          <div className="space-y-2">
-            <h1 className="text-xl sm:text-2xl font-black text-white flex items-center gap-2">
-              <span>Good evening, {profile.name}</span>
-              <span className="animate-bounce">👋</span>
+      <div className="space-y-6">
+        {/* ── Section 1: Hero Greeting ── */}
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+          <div>
+            <h1 className="text-lg font-bold text-text-primary">
+              {getGreeting()}, {profile.name}
             </h1>
-            <p className="text-xs text-slate-300">
-              Ready to decode some DSA? Your algorithmic reasoning is strengthening daily.
+            <p className="text-xs text-text-muted mt-0.5">
+              Ready to decode some DSA today.
             </p>
-            <div className="pt-2 p-3 bg-cyan-950/50 border border-cyan-500/30 rounded-2xl text-xs text-cyan-200 flex items-start gap-2 max-w-2xl">
-              <Sparkles className="w-4 h-4 text-cyan-400 shrink-0 mt-0.5" />
-              <span>
-                <strong>AI Recommendation: </strong> You have made solid progress in Arrays. Spend 15 minutes reviewing <strong>Sliding Window</strong> boundary contraction before starting dynamic programming.
-              </span>
-            </div>
           </div>
 
           <div className="flex items-center gap-3">
-            <Link
-              href="/practice"
-              className="flex items-center gap-2 px-5 py-3 text-xs font-bold text-slate-950 bg-gradient-to-r from-cyan-400 to-emerald-400 hover:opacity-95 rounded-2xl transition-all shadow-md shadow-cyan-500/20"
-            >
-              <span>Solve Today's Problem</span>
-              <ArrowRight className="w-4 h-4" />
-            </Link>
+            {/* Streak pill */}
+            <div className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold text-accent-amber bg-accent-amber/10 border border-accent-amber/20 rounded-lg">
+              <Flame className="w-3.5 h-3.5 fill-accent-amber text-accent-amber" />
+              <span>{streak.currentStreak} day streak</span>
+            </div>
+
+            {/* Level */}
+            <div className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold text-accent bg-accent-subtle border border-accent/10 rounded-lg">
+              <Zap className="w-3.5 h-3.5" />
+              <span>Level {profile.level} · {profile.xp} XP</span>
+            </div>
           </div>
         </div>
 
-        {/* 4 Core Stat Cards */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-          {/* Streak Card */}
-          <Link
-            href="/progress"
-            className="p-5 bg-slate-900 border border-slate-800 hover:border-amber-500/40 rounded-3xl space-y-2 transition-all shadow-lg group"
-          >
-            <div className="flex items-center justify-between text-xs text-slate-400">
-              <span className="font-semibold">Current Streak</span>
-              <Flame className="w-4 h-4 text-amber-400 fill-amber-400 group-hover:scale-125 transition-transform" />
+        {/* ── Section 2: Today's Mission ── */}
+        <div className="surface p-5 space-y-4">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              <Target className="w-4 h-4 text-accent" />
+              <h2 className="text-sm font-semibold text-text-primary">Today's Mission</h2>
             </div>
-            <div className="text-2xl font-black text-white">
-              🔥 {streak.currentStreak} <span className="text-xs text-amber-400 font-semibold">Days</span>
-            </div>
-            <div className="text-[11px] text-emerald-400 font-medium">
-              Active & Protected • +{profile.xp} XP
-            </div>
-          </Link>
-
-          {/* Daily Goal Card */}
-          <Link
-            href="/planner"
-            className="p-5 bg-slate-900 border border-slate-800 hover:border-cyan-500/40 rounded-3xl space-y-2 transition-all shadow-lg group"
-          >
-            <div className="flex items-center justify-between text-xs text-slate-400">
-              <span className="font-semibold">Today's Goal</span>
-              <CheckCircle2 className="w-4 h-4 text-cyan-400 group-hover:scale-125 transition-transform" />
-            </div>
-            <div className="text-2xl font-black text-white">
-              {completedTasks} / {tasks.length} <span className="text-xs text-cyan-400 font-semibold">Tasks</span>
-            </div>
-            <div className="text-[11px] text-slate-400">
-              {Math.round((completedTasks / Math.max(tasks.length, 1)) * 100)}% Completed today
-            </div>
-          </Link>
-
-          {/* Study Time Card */}
-          <div className="p-5 bg-slate-900 border border-slate-800 rounded-3xl space-y-2 shadow-lg">
-            <div className="flex items-center justify-between text-xs text-slate-400">
-              <span className="font-semibold">Study Time</span>
-              <Clock className="w-4 h-4 text-emerald-400" />
-            </div>
-            <div className="text-2xl font-black text-white">
-              32 / {profile.dailyStudyTime} <span className="text-xs text-emerald-400 font-semibold">Mins</span>
-            </div>
-            <div className="text-[11px] text-slate-400">
-              On track for {profile.targetDays}-day placement target
-            </div>
-          </div>
-
-          {/* Next Reminder Card */}
-          <Link
-            href="/reminders"
-            className="p-5 bg-slate-900 border border-slate-800 hover:border-purple-500/40 rounded-3xl space-y-2 transition-all shadow-lg group"
-          >
-            <div className="flex items-center justify-between text-xs text-slate-400">
-              <span className="font-semibold">Next Reminder</span>
-              <Bell className="w-4 h-4 text-purple-400 group-hover:scale-125 transition-transform" />
-            </div>
-            <div className="text-2xl font-black text-white">
-              {profile.preferredTime} <span className="text-xs text-purple-400 font-semibold">Today</span>
-            </div>
-            <div className="text-[11px] text-slate-400 truncate">
-              Daily DSA Mastery Session
-            </div>
-          </Link>
-        </div>
-
-        {/* Middle Split: Continue Learning & Weak-Area Radar */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          {/* Left 2 Cols: Continue Learning & Today's Tasks */}
-          <div className="lg:col-span-2 space-y-6">
-            {/* Continue Learning Banner */}
-            <div className="p-6 bg-gradient-to-r from-cyan-900/30 to-slate-900 border border-cyan-500/30 rounded-3xl flex items-center justify-between gap-4 shadow-xl">
-              <div className="space-y-1">
-                <span className="text-[10px] font-bold text-cyan-400 uppercase tracking-wider">
-                  Resume Concept
-                </span>
-                <h3 className="text-base font-bold text-white">
-                  Sliding Window Technique (Dynamic Window)
-                </h3>
-                <p className="text-xs text-slate-400">
-                  Lesson 3: Contraction Invariant & Hash Map Index Tracking (68% complete)
-                </p>
+            <div className="flex items-center gap-2">
+              <span className="text-xxs font-medium text-text-muted">{completedTasks}/{tasks.length} done</span>
+              <div className="w-24 h-1.5 bg-bg-inset rounded-full overflow-hidden">
+                <div
+                  className="h-full bg-accent rounded-full transition-all duration-500"
+                  style={{ width: `${completionPct}%` }}
+                />
               </div>
+            </div>
+          </div>
 
-              <Link
-                href="/learn/sliding-window"
-                className="px-5 py-2.5 text-xs font-bold text-slate-950 bg-cyan-400 hover:bg-cyan-300 rounded-xl transition-colors shrink-0 flex items-center gap-1.5 shadow-md shadow-cyan-500/20"
+          <div className="grid gap-2">
+            {tasks.map((task) => (
+              <div
+                key={task.id}
+                className={clsx(
+                  'flex items-center justify-between gap-3 px-3 py-2.5 rounded-lg border transition-all',
+                  task.isCompleted
+                    ? 'bg-bg-inset border-border-subtle opacity-60'
+                    : 'bg-bg-secondary border-border-default hover:border-accent/20'
+                )}
               >
-                <span>Continue →</span>
-              </Link>
-            </div>
-
-            {/* Today's Missions List */}
-            <div className="p-6 bg-slate-900 border border-slate-800 rounded-3xl space-y-4 shadow-xl">
-              <div className="flex items-center justify-between">
-                <h3 className="text-sm font-bold text-white flex items-center gap-2">
-                  <CheckCircle2 className="w-4 h-4 text-cyan-400" />
-                  <span>Today's Missions</span>
-                </h3>
-                <Link
-                  href="/planner"
-                  className="text-xs font-bold text-cyan-400 hover:underline"
-                >
-                  View Full Schedule →
-                </Link>
-              </div>
-
-              <div className="space-y-2.5">
-                {tasks.map((task) => (
-                  <div
-                    key={task.id}
+                <div className="flex items-center gap-3 min-w-0">
+                  <button
+                    onClick={() => handleToggleTask(task.id)}
+                    className="shrink-0"
+                    aria-label={task.isCompleted ? 'Mark incomplete' : 'Mark complete'}
+                  >
+                    {task.isCompleted ? (
+                      <CheckCircle2 className="w-4.5 h-4.5 text-state-success" />
+                    ) : (
+                      <Circle className="w-4.5 h-4.5 text-text-disabled hover:text-accent transition-colors" />
+                    )}
+                  </button>
+                  <span
                     className={clsx(
-                      'p-3.5 rounded-2xl border transition-all flex items-center justify-between gap-3',
-                      task.isCompleted
-                        ? 'bg-slate-950/60 border-slate-800/60 opacity-80'
-                        : 'bg-slate-950 border-slate-800 hover:border-cyan-500/30'
+                      'text-xs font-medium truncate',
+                      task.isCompleted ? 'text-text-disabled line-through' : 'text-text-primary'
                     )}
                   >
-                    <div className="flex items-center gap-3 min-w-0">
-                      <button
-                        onClick={() => handleToggleTask(task.id)}
-                        className="shrink-0 text-slate-500 hover:text-cyan-400"
-                      >
-                        {task.isCompleted ? (
-                          <CheckCircle2 className="w-5 h-5 text-emerald-400" />
-                        ) : (
-                          <Circle className="w-5 h-5 text-slate-600 hover:text-cyan-400" />
-                        )}
-                      </button>
-                      <span
-                        className={clsx(
-                          'text-xs font-semibold truncate',
-                          task.isCompleted ? 'text-slate-500 line-through' : 'text-slate-200'
-                        )}
-                      >
-                        {task.title}
-                      </span>
-                    </div>
+                    {task.title}
+                  </span>
+                </div>
 
-                    <span className="text-[10px] px-2 py-0.5 rounded-full font-bold bg-slate-900 border border-slate-800 text-slate-400 shrink-0">
-                      +{task.xpReward} XP
-                    </span>
-                  </div>
-                ))}
+                <div className="flex items-center gap-2 shrink-0">
+                  <span className="badge badge-cyan">+{task.xpReward} XP</span>
+                  <span className="text-xxs text-text-muted">{task.estimatedMinutes}m</span>
+                </div>
               </div>
+            ))}
+          </div>
+        </div>
+
+        {/* ── Section 3: Continue Learning + Quick Actions ── */}
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
+          {/* Continue Learning */}
+          <div className="lg:col-span-2 surface-interactive p-5 flex items-center justify-between gap-4">
+            <div className="min-w-0 space-y-1">
+              <span className="text-xxs font-semibold text-accent tracking-wider uppercase">Continue Learning</span>
+              <h3 className="text-sm font-bold text-text-primary truncate">
+                Sliding Window Technique
+              </h3>
+              <p className="text-xs text-text-muted">
+                Contraction invariant & hash map index tracking — 68% complete
+              </p>
             </div>
+            <Link
+              href="/learn/sliding-window"
+              className="btn-primary shrink-0"
+            >
+              Continue
+              <ArrowRight className="w-3.5 h-3.5" />
+            </Link>
           </div>
 
-          {/* Right Col: Weak-Topic Mastery Radar */}
-          <div className="p-6 bg-slate-900 border border-slate-800 rounded-3xl space-y-6 shadow-xl flex flex-col justify-between">
-            <div>
-              <div className="flex items-center justify-between pb-2 border-b border-slate-800">
-                <span className="text-xs font-bold text-white flex items-center gap-1.5">
-                  <BarChart3 className="w-4 h-4 text-cyan-400" />
-                  <span>Topic Mastery & Weak-Areas</span>
+          {/* Quick Actions */}
+          <div className="grid grid-cols-3 gap-2">
+            {[
+              { icon: BookOpen, label: 'Learn', href: '/learn', color: 'text-accent' },
+              { icon: Eye, label: 'Visualize', href: '/visualizer', color: 'text-accent-emerald' },
+              { icon: Code2, label: 'Practice', href: '/practice', color: 'text-accent-violet' },
+            ].map((action) => (
+              <Link
+                key={action.href}
+                href={action.href}
+                className="surface-interactive flex flex-col items-center justify-center gap-2 p-4 text-center group"
+              >
+                <action.icon className={clsx('w-5 h-5', action.color, 'group-hover:scale-110 transition-transform')} />
+                <span className="text-xxs font-medium text-text-secondary group-hover:text-text-primary transition-colors">
+                  {action.label}
                 </span>
-                <span className="text-[10px] text-slate-500 font-mono">Updated today</span>
-              </div>
+              </Link>
+            ))}
+          </div>
+        </div>
 
-              <div className="space-y-4 pt-4">
-                {[
-                  { topic: 'Arrays & Two Pointers', mastery: 86, color: 'bg-emerald-400' },
-                  { topic: 'Strings & Hash Maps', mastery: 74, color: 'bg-cyan-400' },
-                  { topic: 'Binary Search Trees', mastery: 51, color: 'bg-amber-400' },
-                  { topic: 'Graphs (BFS/DFS)', mastery: 42, color: 'bg-rose-400' },
-                  { topic: 'Dynamic Programming', mastery: 38, color: 'bg-rose-500' },
-                ].map((item) => (
-                  <div key={item.topic} className="space-y-1 text-xs">
-                    <div className="flex justify-between font-bold">
-                      <span className="text-slate-300">{item.topic}</span>
-                      <span className="text-slate-400 font-mono">{item.mastery}%</span>
-                    </div>
-                    <div className="w-full h-2 bg-slate-950 rounded-full overflow-hidden border border-slate-800">
-                      <div
-                        className={clsx('h-full rounded-full transition-all duration-500', item.color)}
-                        style={{ width: `${item.mastery}%` }}
-                      />
-                    </div>
-                  </div>
-                ))}
-              </div>
+        {/* ── Section 4: Heatmap + Topic Mastery ── */}
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
+          {/* Heatmap */}
+          <div className="lg:col-span-2">
+            <DSAHeatmap activities={activities} streak={streak} />
+          </div>
+
+          {/* Topic Mastery */}
+          <div className="surface p-5 space-y-4">
+            <div className="flex items-center gap-2">
+              <BarChart3 className="w-4 h-4 text-accent" />
+              <h3 className="text-sm font-semibold text-text-primary">Topic Mastery</h3>
             </div>
 
-            <div className="p-3.5 bg-slate-950 rounded-2xl border border-slate-800 text-[11px] text-slate-300 space-y-1">
-              <span className="font-bold text-amber-400">Adaptive AI Note:</span>
-              <p className="text-slate-400 leading-tight">
-                DP and Graphs need reinforcement. Tomorrow's mission will emphasize recursion trees.
-              </p>
+            <div className="space-y-3">
+              {[
+                { topic: 'Arrays & Two Pointers', mastery: 86, color: 'bg-state-success' },
+                { topic: 'Strings & Hash Maps', mastery: 74, color: 'bg-accent' },
+                { topic: 'Binary Search', mastery: 51, color: 'bg-accent-amber' },
+                { topic: 'Graphs (BFS/DFS)', mastery: 42, color: 'bg-accent-rose' },
+                { topic: 'Dynamic Programming', mastery: 38, color: 'bg-accent-rose' },
+              ].map((item) => (
+                <div key={item.topic} className="space-y-1">
+                  <div className="flex justify-between items-center">
+                    <span className="text-xs font-medium text-text-secondary">{item.topic}</span>
+                    <span className="text-xxs font-mono text-text-muted">{item.mastery}%</span>
+                  </div>
+                  <div className="w-full h-1.5 bg-bg-inset rounded-full overflow-hidden">
+                    <div
+                      className={clsx('h-full rounded-full transition-all duration-700', item.color)}
+                      style={{ width: `${item.mastery}%` }}
+                    />
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            {/* AI Insight */}
+            <div className="surface-inset p-3 mt-2">
+              <div className="flex items-start gap-2">
+                <Sparkles className="w-3.5 h-3.5 text-accent shrink-0 mt-0.5" />
+                <p className="text-xxs text-text-muted leading-relaxed">
+                  <span className="font-semibold text-accent-amber">Focus needed:</span> DP and Graphs
+                  are below 50%. Tomorrow's mission will emphasize recursion trees and BFS patterns.
+                </p>
+              </div>
             </div>
           </div>
         </div>
 
-        {/* Bottom Section: 365-Day Activity Heatmap */}
-        <DSAHeatmap activities={activities} streak={streak} />
+        {/* ── Section 5: Stats Row ── */}
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+          {[
+            { label: 'Problems Solved', value: profile.solvedProblems.length, icon: Code2, color: 'text-accent' },
+            { label: 'Topics Learned', value: profile.completedTopics.length, icon: BookOpen, color: 'text-accent-emerald' },
+            { label: 'Study Time', value: `${profile.dailyStudyTime}m`, icon: Clock, color: 'text-accent-violet' },
+            { label: 'Active Days', value: streak.totalActiveDays, icon: TrendingUp, color: 'text-accent-amber' },
+          ].map((stat) => (
+            <div key={stat.label} className="surface p-4 space-y-1.5">
+              <div className="flex items-center justify-between">
+                <span className="text-xxs font-medium text-text-muted">{stat.label}</span>
+                <stat.icon className={clsx('w-3.5 h-3.5', stat.color)} />
+              </div>
+              <div className="text-lg font-bold text-text-primary">{stat.value}</div>
+            </div>
+          ))}
+        </div>
       </div>
     </AppLayout>
   );
