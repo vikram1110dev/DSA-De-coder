@@ -20,6 +20,20 @@ export default function ProgressPage() {
     setStreak(storageService.getStreakState());
     setActivities(storageService.getActivities());
   }, []);
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  if (!mounted) {
+    return (
+      <AppLayout>
+        <div className="flex items-center justify-center h-64">
+          <div className="w-6 h-6 border-2 border-accent border-t-transparent rounded-full animate-spin"></div>
+        </div>
+      </AppLayout>
+    );
+  }
 
   return (
     <AppLayout>

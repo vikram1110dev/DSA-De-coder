@@ -4,11 +4,12 @@ import React, { useState, useEffect } from 'react';
 import { AppLayout } from '@/components/layout/AppLayout';
 import { UserProfile, DSALevel, ProgrammingLanguage, LearningGoal, AIMode } from '@/types';
 import { storageService } from '@/lib/storage';
-import { User, BookOpen, Sparkles, Save, Check, Download } from 'lucide-react';
+import { User, BookOpen, Sparkles, Save, Check, Download, AlertTriangle, Trash2 } from 'lucide-react';
 
 export default function SettingsPage() {
   const [profile, setProfile] = useState<UserProfile>(storageService.getProfile());
   const [savedMessage, setSavedMessage] = useState(false);
+  const [showResetWarning, setShowResetWarning] = useState(false);
 
   useEffect(() => { setProfile(storageService.getProfile()); }, []);
 
@@ -31,8 +32,28 @@ export default function SettingsPage() {
     a.href = url; a.download = `dsa_decoder_backup_${Date.now()}.json`; a.click();
   };
 
+  const handleReset = () => {
+    storageService.resetAllData();
+    window.location.reload();
+  };
+
   const inputClass = "w-full surface-inset px-3 py-2 text-xs text-text-primary focus:outline-none focus:ring-1 focus:ring-accent rounded-lg";
   const labelClass = "text-xxs font-semibold text-text-secondary block mb-1";
+
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  if (!mounted) {
+    return (
+      <AppLayout>
+        <div className="flex items-center justify-center h-64">
+          <div className="w-6 h-6 border-2 border-accent border-t-transparent rounded-full animate-spin"></div>
+        </div>
+      </AppLayout>
+    );
+  }
 
   return (
     <AppLayout>
@@ -126,15 +147,53 @@ export default function SettingsPage() {
 
           {/* Actions */}
           <div className="flex flex-wrap items-center justify-between gap-3 pt-2">
-            <button type="button" onClick={handleExportData} className="btn-secondary">
-              <Download className="w-3.5 h-3.5" /> Export Backup
-            </button>
+            <div className="flex gap-2">
+              <button type="button" onClick={handleExportData} className="btn-secondary">
+                <Download className="w-3.5 h-3.5" /> Export Backup
+              </button>
+              <button type="button" onClick={() => setShowResetWarning(true)} className="btn-secondary !text-state-error border-state-error/20 hover:border-state-error/50 hover:bg-state-error/10">
+                <Trash2 className="w-3.5 h-3.5" /> Reset App
+              </button>
+            </div>
             <button type="submit" className="btn-primary px-5 py-2.5">
               <Save className="w-3.5 h-3.5" /> Save Preferences
             </button>
           </div>
         </form>
       </div>
+
+      {/* Reset Warning Modal */}
+      {showResetWarning && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-bg-primary/80 backdrop-blur-sm animate-fade-in">
+          <div className="surface-elevated max-w-md w-full p-6 animate-scale-in">
+            <div className="flex items-center gap-3 text-state-error mb-4">
+              <div className="w-10 h-10 rounded-full bg-state-error/10 flex items-center justify-center shrink-0">
+                <AlertTriangle className="w-5 h-5" />
+              </div>
+              <h2 className="text-lg font-bold">Reset All Data?</h2>
+            </div>
+            
+            <p className="text-sm text-text-secondary mb-6 leading-relaxed">
+              This action will permanently delete all your progress, solved problems, streaks, notes, bookmarks, and settings. <strong>This cannot be undone.</strong>
+            </p>
+
+            <div className="flex items-center justify-end gap-3">
+              <button 
+                onClick={() => setShowResetWarning(false)}
+                className="btn-ghost"
+              >
+                Cancel
+              </button>
+              <button 
+                onClick={handleReset}
+                className="px-4 py-2 text-xs font-semibold text-white bg-state-error rounded-lg hover:bg-state-error/90 transition-colors"
+              >
+                Yes, Reset Everything
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </AppLayout>
   );
 }

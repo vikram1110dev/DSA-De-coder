@@ -11,10 +11,13 @@ import {
   Bell,
   CheckCheck,
   ExternalLink,
+  Sun,
+  Moon,
 } from 'lucide-react';
 import { storageService } from '@/lib/storage';
 import { NotificationItem, UserProfile } from '@/types';
 import { SearchModal } from './SearchModal';
+import { useTheme } from '@/components/ThemeProvider';
 import { clsx } from 'clsx';
 
 interface NavbarProps {
@@ -39,27 +42,46 @@ const ROUTE_TITLES: Record<string, string> = {
   '/settings': 'Settings',
 };
 
+const ThemeToggle = () => {
+  const { theme, toggleTheme } = useTheme();
+  return (
+    <button
+      onClick={toggleTheme}
+      className="relative p-2 text-text-muted hover:text-text-primary rounded-lg hover:bg-[var(--hover-overlay)] transition-all"
+      aria-label={`Switch to ${theme === 'dark' ? 'light' : 'dark'} mode`}
+      title={`Switch to ${theme === 'dark' ? 'light' : 'dark'} mode`}
+    >
+      <Sun className={clsx('w-4 h-4 transition-all duration-300 absolute inset-0 m-auto', theme === 'light' ? 'opacity-100 rotate-0 scale-100' : 'opacity-0 rotate-90 scale-0')} />
+      <Moon className={clsx('w-4 h-4 transition-all duration-300', theme === 'dark' ? 'opacity-100 rotate-0 scale-100' : 'opacity-0 -rotate-90 scale-0')} />
+    </button>
+  );
+};
+
 export const Navbar: React.FC<NavbarProps> = ({ onToggleSidebar }) => {
   const pathname = usePathname();
   const [profile, setProfile] = useState<UserProfile>(storageService.getProfile());
   const [notifications, setNotifications] = useState<NotificationItem[]>([]);
   const [showNotifDropdown, setShowNotifDropdown] = useState(false);
   const [showSearchModal, setShowSearchModal] = useState(false);
+  const [mounted, setMounted] = useState(false);
+  const [streak, setStreak] = useState(storageService.getStreakState());
 
   useEffect(() => {
+    setMounted(true);
     setProfile(storageService.getProfile());
     setNotifications(storageService.getNotifications());
+    setStreak(storageService.getStreakState());
 
     const handleUpdate = () => {
       setProfile(storageService.getProfile());
       setNotifications(storageService.getNotifications());
+      setStreak(storageService.getStreakState());
     };
     window.addEventListener('storage', handleUpdate);
     return () => window.removeEventListener('storage', handleUpdate);
   }, []);
 
   const unreadCount = notifications.filter((n) => !n.isRead).length;
-  const streak = storageService.getStreakState();
 
   const handleMarkAllRead = () => {
     const updated = storageService.markAllNotificationsRead();
@@ -120,10 +142,13 @@ export const Navbar: React.FC<NavbarProps> = ({ onToggleSidebar }) => {
             className="flex items-center gap-1 px-2 py-1.5 text-xs font-semibold text-accent-amber rounded-lg hover:bg-accent-amber/10 transition-colors"
           >
             <Flame className="w-3.5 h-3.5 fill-accent-amber text-accent-amber" />
-            <span>{streak.currentStreak}</span>
+            <span>{mounted ? streak.currentStreak : 0}</span>
           </Link>
 
 
+
+          {/* Theme toggle */}
+          <ThemeToggle />
 
           {/* Notifications */}
           <div className="relative">

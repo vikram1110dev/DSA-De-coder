@@ -47,13 +47,27 @@ export default function DashboardPage() {
   const completedTasks = tasks.filter((t) => t.isCompleted).length;
   const completionPct = Math.round((completedTasks / Math.max(tasks.length, 1)) * 100);
 
-  // Get time-based greeting
   const getGreeting = () => {
     const h = new Date().getHours();
     if (h < 12) return 'Good morning';
     if (h < 17) return 'Good afternoon';
     return 'Good evening';
   };
+
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  if (!mounted) {
+    return (
+      <AppLayout>
+        <div className="flex items-center justify-center h-64">
+          <div className="w-6 h-6 border-2 border-accent border-t-transparent rounded-full animate-spin"></div>
+        </div>
+      </AppLayout>
+    );
+  }
 
   return (
     <AppLayout>
@@ -146,22 +160,36 @@ export default function DashboardPage() {
 
         {/* ── Section 3: Continue Learning + Quick Actions ── */}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
-          {/* Continue Learning */}
+          {/* Continue Learning / Start Journey */}
           <div className="lg:col-span-2 surface-interactive p-5 flex items-center justify-between gap-4">
             <div className="min-w-0 space-y-1">
-              <span className="text-xxs font-semibold text-accent tracking-wider uppercase">Continue Learning</span>
-              <h3 className="text-sm font-bold text-text-primary truncate">
-                Sliding Window Technique
-              </h3>
-              <p className="text-xs text-text-muted">
-                Contraction invariant & hash map index tracking — 68% complete
-              </p>
+              {tasks.length > 0 ? (
+                <>
+                  <span className="text-xxs font-semibold text-accent tracking-wider uppercase">Continue Learning</span>
+                  <h3 className="text-sm font-bold text-text-primary truncate">
+                    Sliding Window Technique
+                  </h3>
+                  <p className="text-xs text-text-muted">
+                    Contraction invariant & hash map index tracking — 68% complete
+                  </p>
+                </>
+              ) : (
+                <>
+                  <span className="text-xxs font-semibold text-accent tracking-wider uppercase">Start Your Journey</span>
+                  <h3 className="text-sm font-bold text-text-primary truncate">
+                    Welcome to DSA De-coder!
+                  </h3>
+                  <p className="text-xs text-text-muted">
+                    Dive into your first algorithm topic or set up your study planner.
+                  </p>
+                </>
+              )}
             </div>
             <Link
-              href="/learn/sliding-window"
+              href={tasks.length > 0 ? "/learn/sliding-window" : "/learn"}
               className="btn-primary shrink-0"
             >
-              Continue
+              {tasks.length > 0 ? 'Continue' : 'Get Started'}
               <ArrowRight className="w-3.5 h-3.5" />
             </Link>
           </div>

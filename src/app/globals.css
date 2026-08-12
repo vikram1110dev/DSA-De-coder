@@ -19,6 +19,7 @@
     --text-primary: #e8ecf4;
     --text-secondary: #94a3b8;
     --text-muted: #64748b;
+    --text-disabled: #475569;
     
     /* Accent */
     --accent: #06b6d4;
@@ -32,6 +33,83 @@
     
     /* Radius */
     --radius: 10px;
+
+    /* Scrollbar */
+    --scrollbar-thumb: rgba(255, 255, 255, 0.08);
+    --scrollbar-thumb-hover: rgba(255, 255, 255, 0.14);
+
+    /* Button hover overlay */
+    --hover-overlay: rgba(255, 255, 255, 0.05);
+  }
+
+  /* ── Light Mode ── */
+  :root.light {
+    --bg-primary: #f8fafc;
+    --bg-secondary: #f1f5f9;
+    --bg-surface: #ffffff;
+    --bg-elevated: #ffffff;
+    --bg-inset: #f1f5f9;
+
+    --text-primary: #0f172a;
+    --text-secondary: #475569;
+    --text-muted: #64748b;
+    --text-disabled: #94a3b8;
+
+    --accent: #0891b2;
+    --accent-hover: #0e7490;
+    --accent-muted: rgba(8, 145, 178, 0.1);
+
+    --border-subtle: rgba(0, 0, 0, 0.06);
+    --border-default: rgba(0, 0, 0, 0.1);
+    --border-strong: rgba(0, 0, 0, 0.16);
+
+    --scrollbar-thumb: rgba(0, 0, 0, 0.1);
+    --scrollbar-thumb-hover: rgba(0, 0, 0, 0.2);
+
+    --hover-overlay: rgba(0, 0, 0, 0.04);
+
+    /* Light mode shadows */
+    --shadow-surface: 0 1px 3px rgba(0, 0, 0, 0.06), 0 1px 2px rgba(0, 0, 0, 0.04);
+    --shadow-elevated: 0 4px 12px rgba(0, 0, 0, 0.08);
+  }
+
+  :root.light ::selection {
+    background: rgba(8, 145, 178, 0.2);
+    color: #0f172a;
+  }
+
+  :root.light .surface {
+    box-shadow: var(--shadow-surface);
+  }
+
+  :root.light .surface-elevated {
+    box-shadow: var(--shadow-elevated);
+  }
+
+  :root.light .surface-interactive:hover {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+  }
+
+  /* Light mode badge adjustments */
+  :root.light .badge-cyan {
+    color: #0e7490;
+    background: rgba(8, 145, 178, 0.08);
+    border-color: rgba(8, 145, 178, 0.18);
+  }
+  :root.light .badge-emerald {
+    color: #059669;
+    background: rgba(5, 150, 105, 0.08);
+    border-color: rgba(5, 150, 105, 0.18);
+  }
+  :root.light .badge-amber {
+    color: #d97706;
+    background: rgba(217, 119, 6, 0.08);
+    border-color: rgba(217, 119, 6, 0.18);
+  }
+  :root.light .badge-rose {
+    color: #e11d48;
+    background: rgba(225, 29, 72, 0.08);
+    border-color: rgba(225, 29, 72, 0.18);
   }
 
   /* Base element styles */
@@ -177,7 +255,7 @@
 
   .btn-ghost:hover {
     color: var(--text-primary);
-    background: rgba(255, 255, 255, 0.05);
+    background: var(--hover-overlay);
   }
 
   /* Badge */
@@ -238,12 +316,12 @@
 }
 
 ::-webkit-scrollbar-thumb {
-  background: rgba(255, 255, 255, 0.08);
+  background: var(--scrollbar-thumb);
   border-radius: 4px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: rgba(255, 255, 255, 0.14);
+  background: var(--scrollbar-thumb-hover);
 }
 
 /* ────────────────────────────────────────────

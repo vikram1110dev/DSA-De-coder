@@ -379,10 +379,13 @@ export async function chatWithDSAMentor(
     if (lastMsg.includes('binary search') || lastMsg.includes('sorted')) {
       return `Binary Search requires **sorted data** (or a monotonic condition) because sorting gives you the superpower to **eliminate 50% of choices** with a single comparison.\n\nIf the data was random, knowing that \`target > arr[mid]\` tells you nothing about where the target lives. In sorted data, it guarantees the target *must* be in the right half! ⚡`;
     }
+    if (lastMsg.includes('two sum')) {
+      return `💡 **Two Sum Concept**\n\nThe goal is to find two numbers that add up to a target.\nInstead of using a slow nested loop (O(N²)), we can use a **Hash Map**! As we iterate through the array, we calculate the \`complement = target - currentNumber\`. If the complement is in our map, we found our pair! If not, we store the \`currentNumber\` and its index in the map for future lookups. This brings our time complexity down to **O(N)**! ⚡`;
+    }
     if (lastMsg.includes('hint')) {
       return `💡 **Mentor Hint**: Think about what happens if you store elements you have already seen in a Hash Map. Can you check whether the complement \`target - current\` exists in O(1) time?`;
     }
-    return `Hello! I'm your AI DSA Mentor. I'm here to help you master Data Structures & Algorithms with deep intuitive understanding. Ask me to explain any concept, give progressive hints, analyze time complexity, or review your code!`;
+    return `I am currently in offline dummy mode! Try asking me to explain 'recursion', 'binary search', 'two sum', or ask for a 'hint'!`;
   }
 
   try {

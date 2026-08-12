@@ -92,27 +92,24 @@ export const AIMentorChat: React.FC = () => {
   };
 
   return (
-    <div className="flex flex-col h-[78vh] bg-slate-900 border border-slate-800 rounded-3xl overflow-hidden shadow-2xl">
+    <div className="flex flex-col h-[78vh] surface border border-border-default rounded-3xl overflow-hidden shadow-2xl">
       {/* Top Header Bar */}
-      <div className="flex flex-wrap items-center justify-between gap-3 px-6 py-4 border-b border-slate-800 bg-slate-950/70 backdrop-blur-md">
+      <div className="flex flex-wrap items-center justify-between gap-3 px-6 py-4 border-b border-border-default bg-bg-surface/70 backdrop-blur-md">
         <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-2xl bg-gradient-to-tr from-cyan-500 to-indigo-600 flex items-center justify-center text-slate-950 font-black shadow-lg shadow-cyan-500/20">
-            <Bot className="w-5 h-5 text-slate-950" />
+          <div className="w-10 h-10 rounded-2xl bg-gradient-to-tr from-accent to-accent-violet flex items-center justify-center text-white font-black shadow-lg shadow-accent/20">
+            <Bot className="w-5 h-5 text-white" />
           </div>
           <div>
-            <h3 className="text-sm font-bold text-white flex items-center gap-2">
-              <span>DSA Mentor AI</span>
-              <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
-            </h3>
-            <p className="text-[11px] text-slate-400">
-              Personalized algorithm mentor & tutor
-            </p>
+            <h2 className="text-base font-bold text-text-primary flex items-center gap-2">
+              DSA Mentor AI
+              <span className="w-2 h-2 rounded-full bg-state-success animate-pulse" />
+            </h2>
+            <p className="text-[11px] text-text-secondary">Personalized algorithm mentor & tutor</p>
           </div>
         </div>
 
-        {/* Mode Switcher */}
         <div className="flex items-center gap-2">
-          <div className="flex items-center bg-slate-900 p-1 rounded-xl border border-slate-800">
+          <div className="flex items-center bg-bg-inset p-1 rounded-xl border border-border-default">
             {(['beginner', 'standard', 'deep-dive', 'interview'] as AIMode[]).map((m) => (
               <button
                 key={m}
@@ -120,8 +117,8 @@ export const AIMentorChat: React.FC = () => {
                 className={clsx(
                   'px-2.5 py-1 text-[11px] font-bold rounded-lg capitalize transition-colors',
                   mode === m
-                    ? 'bg-cyan-500 text-slate-950 shadow-sm'
-                    : 'text-slate-400 hover:text-slate-200'
+                    ? 'bg-accent text-white shadow-sm'
+                    : 'text-text-muted hover:text-text-primary'
                 )}
               >
                 {m === 'deep-dive' ? 'Deep Dive' : m}
@@ -131,30 +128,29 @@ export const AIMentorChat: React.FC = () => {
 
           <button
             onClick={handleClear}
-            className="p-2 text-slate-400 hover:text-white bg-slate-800 rounded-xl transition-colors"
-            title="Reset Chat"
+            className="p-2 text-text-muted hover:text-text-primary bg-bg-inset hover:bg-bg-secondary rounded-xl transition-colors border border-border-default"
+            title="Reset Conversation"
           >
             <RotateCcw className="w-4 h-4" />
           </button>
         </div>
       </div>
 
-      {/* Messages Stream */}
-      <div className="flex-1 p-6 overflow-y-auto space-y-4 custom-scrollbar bg-slate-950/40">
+      <div className="flex-1 overflow-y-auto p-6 space-y-6 custom-scrollbar bg-bg-surface relative">
         {messages.map((msg) => (
           <div
             key={msg.id}
             className={clsx(
-              'flex gap-3 max-w-3xl',
-              msg.role === 'user' ? 'ml-auto flex-row-reverse' : 'mr-auto'
+              'flex gap-4 max-w-[85%] animate-in slide-in-from-bottom-2',
+              msg.role === 'user' ? 'ml-auto flex-row-reverse' : ''
             )}
           >
             <div
               className={clsx(
-                'w-8 h-8 rounded-xl shrink-0 flex items-center justify-center text-xs font-bold shadow-md',
+                'flex-shrink-0 w-8 h-8 rounded-xl flex items-center justify-center shadow-md',
                 msg.role === 'user'
-                  ? 'bg-cyan-500 text-slate-950'
-                  : 'bg-gradient-to-tr from-cyan-600 to-indigo-600 text-white'
+                  ? 'bg-accent text-white'
+                  : 'bg-accent/20 border border-accent/30 text-accent'
               )}
             >
               {msg.role === 'user' ? <User className="w-4 h-4" /> : <Bot className="w-4 h-4" />}
@@ -162,17 +158,17 @@ export const AIMentorChat: React.FC = () => {
 
             <div
               className={clsx(
-                'p-4 rounded-3xl text-xs leading-relaxed shadow-md',
+                'px-5 py-4 rounded-2xl text-[13px] leading-relaxed relative group',
                 msg.role === 'user'
-                  ? 'bg-cyan-600 text-white rounded-tr-none'
-                  : 'bg-slate-900 border border-slate-800 text-slate-200 rounded-tl-none space-y-2'
+                  ? 'bg-accent text-white rounded-tr-none'
+                  : 'surface border border-border-default text-text-primary rounded-tl-none shadow-sm'
               )}
             >
               <div className="whitespace-pre-wrap">{msg.content}</div>
               <div
                 className={clsx(
-                  'text-[10px] pt-1 text-right',
-                  msg.role === 'user' ? 'text-cyan-200' : 'text-slate-500'
+                  'text-[9px] mt-2 font-medium opacity-0 group-hover:opacity-100 transition-opacity absolute -bottom-5',
+                  msg.role === 'user' ? 'right-1 text-text-muted' : 'left-1 text-text-muted'
                 )}
               >
                 {msg.timestamp}
@@ -182,13 +178,14 @@ export const AIMentorChat: React.FC = () => {
         ))}
 
         {loading && (
-          <div className="flex gap-3 mr-auto">
-            <div className="w-8 h-8 rounded-xl bg-gradient-to-tr from-cyan-600 to-indigo-600 text-white flex items-center justify-center text-xs font-bold shadow-md">
-              <Bot className="w-4 h-4 animate-spin-slow" />
+          <div className="flex gap-4 max-w-[80%] animate-in fade-in">
+            <div className="flex-shrink-0 w-8 h-8 rounded-xl bg-accent/20 border border-accent/30 text-accent flex items-center justify-center shadow-md">
+              <Sparkles className="w-4 h-4 animate-spin" />
             </div>
-            <div className="p-4 bg-slate-900 border border-slate-800 rounded-3xl rounded-tl-none text-xs text-slate-400 flex items-center gap-2">
-              <Sparkles className="w-4 h-4 text-cyan-400 animate-spin" />
-              <span>Mentor is thinking...</span>
+            <div className="px-5 py-4 rounded-2xl bg-bg-inset border border-border-default text-text-primary rounded-tl-none flex items-center gap-2">
+              <span className="w-1.5 h-1.5 bg-accent rounded-full animate-bounce" />
+              <span className="w-1.5 h-1.5 bg-accent rounded-full animate-bounce delay-75" />
+              <span className="w-1.5 h-1.5 bg-accent rounded-full animate-bounce delay-150" />
             </div>
           </div>
         )}
@@ -196,47 +193,56 @@ export const AIMentorChat: React.FC = () => {
         <div ref={chatBottomRef} />
       </div>
 
-      {/* Suggested Prompt Quick Chips */}
-      <div className="px-6 py-2 bg-slate-950/80 border-t border-slate-800 flex items-center gap-2 overflow-x-auto text-[11px] custom-scrollbar">
-        <span className="text-slate-500 font-semibold shrink-0">Suggestions:</span>
-        {[
-          'Explain recursion with a simple analogy',
-          'Why does binary search require sorted data?',
-          'Give me a progressive hint for 3Sum',
-          'How does sliding window achieve O(N)?'
-        ].map((chip) => (
-          <button
-            key={chip}
-            onClick={() => handleSend(chip)}
-            className="px-3 py-1 bg-slate-900 hover:bg-slate-800 border border-slate-800 text-slate-400 hover:text-cyan-300 rounded-xl whitespace-nowrap transition-colors"
-          >
-            {chip}
-          </button>
-        ))}
-      </div>
+      <div className="p-4 border-t border-border-default bg-bg-surface z-10">
+        <div className="flex gap-2 overflow-x-auto pb-3 custom-scrollbar">
+          <span className="text-[10px] font-bold text-text-secondary px-2 py-1 uppercase tracking-wider">
+            Suggestions:
+          </span>
+          {[
+            'Explain recursion with a simple analogy',
+            'Why does binary search require sorted data?',
+            'Give me a progressive hint for 3Sum',
+            'How does sliding window achieve O(N)?'
+          ].map((suggestion, i) => (
+            <button
+              key={i}
+              onClick={() => handleSend(suggestion)}
+              className="text-[11px] whitespace-nowrap px-3 py-1.5 rounded-full bg-bg-inset border border-border-default text-text-muted hover:text-text-primary hover:border-accent/40 transition-colors"
+            >
+              {suggestion}
+            </button>
+          ))}
+        </div>
 
-      {/* Input Composer */}
-      <div className="p-4 bg-slate-950 border-t border-slate-800">
         <form
           onSubmit={(e) => {
             e.preventDefault();
             handleSend();
           }}
-          className="flex items-center gap-2"
+          className="relative flex items-end gap-2"
         >
-          <input
-            type="text"
-            value={input}
-            onChange={(e) => setInput(e.target.value)}
-            placeholder="Ask your DSA mentor anything... (e.g. 'Explain recursion trees', 'Debug my loop')"
-            className="flex-1 bg-slate-900 border border-slate-800 rounded-2xl px-4 py-3 text-xs text-slate-200 placeholder-slate-500 focus:outline-none focus:border-cyan-500"
-          />
+          <div className="flex-1 relative bg-bg-inset border border-border-default focus-within:border-accent rounded-2xl transition-colors">
+            <textarea
+              value={input}
+              onChange={(e) => setInput(e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter' && !e.shiftKey) {
+                  e.preventDefault();
+                  handleSend();
+                }
+              }}
+              placeholder="Ask your DSA mentor anything... (e.g. 'Explain recursion trees', 'Debug my loop')"
+              className="w-full bg-transparent p-4 text-xs text-text-primary placeholder:text-text-muted focus:outline-none resize-none custom-scrollbar"
+              rows={1}
+              style={{ minHeight: '52px', maxHeight: '120px' }}
+            />
+          </div>
           <button
             type="submit"
-            disabled={loading || !input.trim()}
-            className="px-5 py-3 rounded-2xl font-bold text-xs bg-gradient-to-r from-cyan-400 to-emerald-400 text-slate-950 hover:opacity-95 disabled:opacity-40 transition-all shadow-md shadow-cyan-500/20"
+            disabled={!input.trim() || loading}
+            className="w-[52px] h-[52px] flex-shrink-0 flex items-center justify-center rounded-2xl bg-accent hover:bg-accent-muted disabled:opacity-50 disabled:cursor-not-allowed text-white transition-all shadow-md"
           >
-            <Send className="w-4 h-4" />
+            <Send className="w-5 h-5" />
           </button>
         </form>
       </div>

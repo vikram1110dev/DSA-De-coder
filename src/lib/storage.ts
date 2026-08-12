@@ -241,10 +241,11 @@ export const storageService = {
   },
 
   getActivities(): DSAActivityItem[] {
-    if (typeof window === 'undefined') return generateInitialActivities();
+    if (typeof window === 'undefined') return [];
     const stored = localStorage.getItem(ACTIVITIES_KEY);
     if (!stored) {
-      const initial = generateInitialActivities();
+      const hasReset = localStorage.getItem('dsa_decoder_has_reset') === 'true';
+      const initial = hasReset ? [] : generateInitialActivities();
       localStorage.setItem(ACTIVITIES_KEY, JSON.stringify(initial));
       return initial;
     }
@@ -298,10 +299,11 @@ export const storageService = {
   },
 
   getDailyTasks(): StudyTaskItem[] {
-    if (typeof window === 'undefined') return generateInitialDailyTasks();
+    if (typeof window === 'undefined') return [];
     const stored = localStorage.getItem(TASKS_KEY);
     if (!stored) {
-      const initial = generateInitialDailyTasks();
+      const hasReset = localStorage.getItem('dsa_decoder_has_reset') === 'true';
+      const initial = hasReset ? [] : generateInitialDailyTasks();
       localStorage.setItem(TASKS_KEY, JSON.stringify(initial));
       return initial;
     }
@@ -330,10 +332,11 @@ export const storageService = {
   },
 
   getReminders(): ReminderItem[] {
-    if (typeof window === 'undefined') return generateInitialReminders();
+    if (typeof window === 'undefined') return [];
     const stored = localStorage.getItem(REMINDERS_KEY);
     if (!stored) {
-      const initial = generateInitialReminders();
+      const hasReset = localStorage.getItem('dsa_decoder_has_reset') === 'true';
+      const initial = hasReset ? [] : generateInitialReminders();
       localStorage.setItem(REMINDERS_KEY, JSON.stringify(initial));
       return initial;
     }
@@ -363,10 +366,11 @@ export const storageService = {
   },
 
   getNotifications(): NotificationItem[] {
-    if (typeof window === 'undefined') return generateInitialNotifications();
+    if (typeof window === 'undefined') return [];
     const stored = localStorage.getItem(NOTIFICATIONS_KEY);
     if (!stored) {
-      const initial = generateInitialNotifications();
+      const hasReset = localStorage.getItem('dsa_decoder_has_reset') === 'true';
+      const initial = hasReset ? [] : generateInitialNotifications();
       localStorage.setItem(NOTIFICATIONS_KEY, JSON.stringify(initial));
       return initial;
     }
@@ -442,5 +446,23 @@ export const storageService = {
       localStorage.setItem(NOTES_KEY, JSON.stringify(notes));
     }
     return notes;
+  },
+
+  resetAllData(): void {
+    if (typeof window !== 'undefined') {
+      localStorage.removeItem(PROFILE_KEY);
+      localStorage.removeItem(ACTIVITIES_KEY);
+      localStorage.removeItem(TASKS_KEY);
+      localStorage.removeItem(REMINDERS_KEY);
+      localStorage.removeItem(NOTIFICATIONS_KEY);
+      localStorage.removeItem(BOOKMARKS_KEY);
+      localStorage.removeItem(NOTES_KEY);
+      localStorage.removeItem(ACHIEVEMENTS_KEY);
+      // Also remove theme
+      localStorage.removeItem('dsa-decoder-theme');
+      
+      // Set a flag so initial mock data is not regenerated
+      localStorage.setItem('dsa_decoder_has_reset', 'true');
+    }
   }
 };

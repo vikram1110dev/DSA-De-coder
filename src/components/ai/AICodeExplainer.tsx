@@ -66,7 +66,7 @@ export const AICodeExplainer: React.FC = () => {
   return (
     <div className="space-y-6">
       {/* Tab Switcher */}
-      <div className="flex items-center gap-2 p-2 bg-slate-900 border border-slate-800 rounded-2xl">
+      <div className="flex items-center gap-2 p-2 surface border border-border-default rounded-2xl">
         <button
           onClick={() => {
             setActiveTab('explainer');
@@ -75,8 +75,8 @@ export const AICodeExplainer: React.FC = () => {
           className={clsx(
             'flex items-center gap-2 px-4 py-2 text-xs font-bold rounded-xl transition-all',
             activeTab === 'explainer'
-              ? 'bg-cyan-500 text-slate-950 shadow-md shadow-cyan-500/20'
-              : 'text-slate-400 hover:text-white'
+              ? 'bg-accent text-white shadow-md shadow-accent/20'
+              : 'text-text-muted hover:text-text-primary'
           )}
         >
           <Code2 className="w-4 h-4" />
@@ -91,8 +91,8 @@ export const AICodeExplainer: React.FC = () => {
           className={clsx(
             'flex items-center gap-2 px-4 py-2 text-xs font-bold rounded-xl transition-all',
             activeTab === 'debugger'
-              ? 'bg-rose-500 text-slate-950 shadow-md shadow-rose-500/20'
-              : 'text-slate-400 hover:text-white'
+              ? 'bg-state-error text-white shadow-md shadow-state-error/20'
+              : 'text-text-muted hover:text-text-primary'
           )}
         >
           <Bug className="w-4 h-4" />
@@ -107,8 +107,8 @@ export const AICodeExplainer: React.FC = () => {
           className={clsx(
             'flex items-center gap-2 px-4 py-2 text-xs font-bold rounded-xl transition-all',
             activeTab === 'complexity'
-              ? 'bg-amber-400 text-slate-950 shadow-md shadow-amber-400/20'
-              : 'text-slate-400 hover:text-white'
+              ? 'bg-state-warning text-white shadow-md shadow-state-warning/20'
+              : 'text-text-muted hover:text-text-primary'
           )}
         >
           <Clock className="w-4 h-4" />
@@ -119,12 +119,12 @@ export const AICodeExplainer: React.FC = () => {
       {/* Editor & Output Grid */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Input Pane */}
-        <div className="p-6 bg-slate-900 border border-slate-800 rounded-3xl space-y-4 shadow-xl">
+        <div className="p-6 surface border border-border-default rounded-3xl space-y-4 shadow-xl">
           <div className="flex items-center justify-between">
-            <span className="text-xs font-bold text-slate-300">
+            <span className="text-xs font-bold text-text-secondary">
               Paste Code to Analyze:
             </span>
-            <span className="text-[10px] text-slate-500 font-mono">
+            <span className="text-[10px] text-text-muted font-mono">
               JavaScript / Python / C++
             </span>
           </div>
@@ -133,12 +133,12 @@ export const AICodeExplainer: React.FC = () => {
             rows={12}
             value={code}
             onChange={(e) => setCode(e.target.value)}
-            className="w-full bg-slate-950 border border-slate-800 rounded-2xl p-4 font-mono text-xs text-cyan-200 focus:outline-none focus:border-cyan-500 leading-relaxed resize-none shadow-inner"
+            className="w-full bg-bg-inset border border-border-default rounded-2xl p-4 font-mono text-xs text-text-primary focus:outline-none focus:border-accent leading-relaxed resize-none shadow-inner custom-scrollbar"
           />
 
           {activeTab === 'debugger' && (
             <div>
-              <label className="text-xs font-bold text-rose-400 block mb-1">
+              <label className="text-xs font-bold text-state-error block mb-1">
                 Bug / Error Symptom:
               </label>
               <input
@@ -146,7 +146,7 @@ export const AICodeExplainer: React.FC = () => {
                 value={errorDesc}
                 onChange={(e) => setErrorDesc(e.target.value)}
                 placeholder="e.g. Fails on empty array, infinite loop on test case 4..."
-                className="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-xs text-slate-200 focus:outline-none focus:border-rose-500"
+                className="w-full bg-bg-inset border border-border-default rounded-xl px-3 py-2 text-xs text-text-primary focus:outline-none focus:border-state-error"
               />
             </div>
           )}
@@ -155,12 +155,12 @@ export const AICodeExplainer: React.FC = () => {
             onClick={handleAnalyze}
             disabled={loading || !code.trim()}
             className={clsx(
-              'w-full flex items-center justify-center gap-2 py-3 rounded-2xl text-xs font-bold text-slate-950 transition-all shadow-md',
+              'w-full flex items-center justify-center gap-2 py-3 rounded-2xl text-xs font-bold text-white transition-all shadow-md',
               activeTab === 'debugger'
-                ? 'bg-rose-400 hover:bg-rose-300 shadow-rose-500/20'
+                ? 'bg-state-error hover:opacity-90 shadow-state-error/20'
                 : activeTab === 'complexity'
-                ? 'bg-amber-400 hover:bg-amber-300 shadow-amber-400/20'
-                : 'bg-gradient-to-r from-cyan-400 to-emerald-400 hover:opacity-95 shadow-cyan-500/20'
+                ? 'bg-state-warning hover:opacity-90 shadow-state-warning/20'
+                : 'bg-gradient-to-r from-accent to-accent-emerald hover:opacity-95 shadow-accent/20'
             )}
           >
             {loading ? (
@@ -184,39 +184,39 @@ export const AICodeExplainer: React.FC = () => {
         </div>
 
         {/* Output Result Pane */}
-        <div className="p-6 bg-slate-950 border border-slate-800 rounded-3xl space-y-4 shadow-2xl min-h-[380px] overflow-y-auto custom-scrollbar">
+        <div className="p-6 bg-bg-inset border border-border-default rounded-3xl space-y-4 shadow-2xl min-h-[380px] overflow-y-auto custom-scrollbar">
           {result ? (
             <div className="space-y-4 animate-in fade-in zoom-in-95 duration-200">
               {activeTab === 'explainer' || activeTab === 'complexity' ? (
                 <>
-                  <div className="flex items-center justify-between border-b border-slate-800 pb-3">
-                    <span className="text-xs font-bold text-cyan-300">
+                  <div className="flex items-center justify-between border-b border-border-default pb-3">
+                    <span className="text-xs font-bold text-accent">
                       Overall Logic & Intuition
                     </span>
                     <Link
                       href="/visualizer"
-                      className="inline-flex items-center gap-1 text-[11px] font-bold text-cyan-400 hover:underline"
+                      className="inline-flex items-center gap-1 text-[11px] font-bold text-accent hover:underline"
                     >
                       <Eye className="w-3.5 h-3.5" />
                       <span>Visualize This Code</span>
                     </Link>
                   </div>
 
-                  <p className="text-xs text-slate-300 leading-relaxed bg-slate-900/80 p-4 rounded-2xl border border-slate-800">
+                  <p className="text-xs text-text-secondary leading-relaxed surface p-4 rounded-2xl border border-border-default">
                     {result.overallLogic}
                   </p>
 
                   <div className="grid grid-cols-2 gap-3 text-xs">
-                    <div className="p-3 bg-slate-900 border border-slate-800 rounded-xl">
-                      <div className="text-slate-500 text-[10px] uppercase font-bold">Time Complexity</div>
-                      <div className="font-mono font-bold text-cyan-400 mt-0.5">
+                    <div className="p-3 surface border border-border-default rounded-xl">
+                      <div className="text-text-muted text-[10px] uppercase font-bold">Time Complexity</div>
+                      <div className="font-mono font-bold text-accent mt-0.5">
                         {result.timeComplexity || 'O(N)'}
                       </div>
                     </div>
 
-                    <div className="p-3 bg-slate-900 border border-slate-800 rounded-xl">
-                      <div className="text-slate-500 text-[10px] uppercase font-bold">Space Complexity</div>
-                      <div className="font-mono font-bold text-emerald-400 mt-0.5">
+                    <div className="p-3 surface border border-border-default rounded-xl">
+                      <div className="text-text-muted text-[10px] uppercase font-bold">Space Complexity</div>
+                      <div className="font-mono font-bold text-state-success mt-0.5">
                         {result.spaceComplexity || 'O(1)'}
                       </div>
                     </div>
@@ -224,12 +224,12 @@ export const AICodeExplainer: React.FC = () => {
 
                   {result.lineByLine?.length > 0 && (
                     <div className="space-y-2 pt-2">
-                      <div className="text-xs font-bold text-slate-400">Line-by-Line Breakdown:</div>
+                      <div className="text-xs font-bold text-text-secondary">Line-by-Line Breakdown:</div>
                       <div className="space-y-1.5 font-mono text-[11px]">
                         {result.lineByLine.slice(0, 5).map((l: any, i: number) => (
-                          <div key={i} className="p-2 bg-slate-900 rounded-xl border border-slate-800">
-                            <span className="text-cyan-400 font-bold">Line {l.line}: </span>
-                            <span className="text-slate-300 font-sans">{l.explanation}</span>
+                          <div key={i} className="p-2 surface rounded-xl border border-border-default">
+                            <span className="text-accent font-bold">Line {l.line}: </span>
+                            <span className="text-text-secondary font-sans">{l.explanation}</span>
                           </div>
                         ))}
                       </div>
@@ -238,35 +238,35 @@ export const AICodeExplainer: React.FC = () => {
                 </>
               ) : (
                 <>
-                  <div className="flex items-center gap-2 text-xs font-bold text-rose-400 border-b border-slate-800 pb-3">
+                  <div className="flex items-center gap-2 text-xs font-bold text-state-error border-b border-border-default pb-3">
                     <AlertTriangle className="w-4 h-4" />
                     <span>Identified Bug: {result.error}</span>
                   </div>
 
-                  <div className="p-3 bg-rose-950/20 border border-rose-800/40 rounded-xl text-xs text-rose-300">
+                  <div className="p-3 bg-state-error/10 border border-state-error/20 rounded-xl text-xs text-state-error">
                     <span className="font-bold">Root Cause: </span>
                     {result.whyItHappens}
                   </div>
 
                   <div>
-                    <span className="text-xs font-bold text-emerald-400 block mb-1">
+                    <span className="text-xs font-bold text-state-success block mb-1">
                       ✓ Corrected Implementation:
                     </span>
-                    <pre className="p-3 bg-slate-900 border border-emerald-500/30 rounded-xl font-mono text-xs text-emerald-200 overflow-x-auto">
+                    <pre className="p-3 surface border border-state-success/30 rounded-xl font-mono text-xs text-text-primary overflow-x-auto">
                       <code>{result.correctedCode}</code>
                     </pre>
                   </div>
 
-                  <p className="text-xs text-slate-300">
-                    <span className="font-bold text-slate-200">Explanation: </span>
+                  <p className="text-xs text-text-secondary">
+                    <span className="font-bold text-text-primary">Explanation: </span>
                     {result.explanation}
                   </p>
                 </>
               )}
             </div>
           ) : (
-            <div className="h-full flex flex-col items-center justify-center text-center text-slate-500 text-xs py-16 space-y-2">
-              <FileCode className="w-8 h-8 text-slate-700" />
+            <div className="h-full flex flex-col items-center justify-center text-center text-text-muted text-xs py-16 space-y-2">
+              <FileCode className="w-8 h-8 text-text-muted opacity-50" />
               <div>Paste code on the left and click analyze to see instant AI feedback.</div>
             </div>
           )}

@@ -49,7 +49,7 @@ export default function ProblemDetailPage() {
         <div className="flex flex-wrap items-center justify-between gap-4">
           <Link
             href="/practice"
-            className="flex items-center gap-2 text-xs font-bold text-slate-400 hover:text-white transition-colors"
+            className="flex items-center gap-2 text-xs font-bold text-text-muted hover:text-text-primary transition-colors"
           >
             <ArrowLeft className="w-4 h-4" />
             <span>Back to Problem List</span>
@@ -57,14 +57,14 @@ export default function ProblemDetailPage() {
 
           {/* Mode Switcher: 5-Step Decoder vs Code Editor */}
           <div className="flex items-center gap-2">
-            <div className="flex items-center bg-slate-900 p-1 rounded-2xl border border-slate-800">
+            <div className="flex items-center surface p-1 rounded-2xl border border-border-default">
               <button
                 onClick={() => setViewMode('decoder')}
                 className={clsx(
                   'flex items-center gap-1.5 px-4 py-2 text-xs font-bold rounded-xl transition-all',
                   viewMode === 'decoder'
-                    ? 'bg-cyan-500 text-slate-950 shadow-md shadow-cyan-500/20'
-                    : 'text-slate-400 hover:text-white'
+                    ? 'bg-accent text-white shadow-md shadow-accent/20'
+                    : 'text-text-muted hover:text-text-primary'
                 )}
               >
                 <Lightbulb className="w-3.5 h-3.5" />
@@ -76,8 +76,8 @@ export default function ProblemDetailPage() {
                 className={clsx(
                   'flex items-center gap-1.5 px-4 py-2 text-xs font-bold rounded-xl transition-all',
                   viewMode === 'editor'
-                    ? 'bg-gradient-to-r from-emerald-400 to-cyan-400 text-slate-950 shadow-md'
-                    : 'text-slate-400 hover:text-white'
+                    ? 'bg-gradient-to-r from-accent-emerald to-accent text-white shadow-md'
+                    : 'text-text-muted hover:text-text-primary'
                 )}
               >
                 <Code2 className="w-3.5 h-3.5" />
@@ -90,8 +90,8 @@ export default function ProblemDetailPage() {
               className={clsx(
                 'p-2.5 rounded-xl border transition-colors',
                 isBookmarked
-                  ? 'bg-cyan-500/20 border-cyan-500/40 text-cyan-300'
-                  : 'bg-slate-900 border-slate-800 text-slate-400 hover:text-white'
+                  ? 'bg-accent/20 border-accent/40 text-accent'
+                  : 'surface border-border-default text-text-muted hover:text-text-primary'
               )}
               title="Bookmark Problem"
             >
@@ -101,35 +101,35 @@ export default function ProblemDetailPage() {
         </div>
 
         {/* Problem Title Banner */}
-        <div className="p-6 bg-slate-900 border border-slate-800 rounded-3xl space-y-3 shadow-xl">
+        <div className="p-6 surface border border-border-default rounded-3xl space-y-3 shadow-xl">
           <div className="flex flex-wrap items-center gap-3">
             <span
               className={clsx(
                 'px-2.5 py-0.5 rounded-full text-[10px] font-extrabold',
                 problem.difficulty === 'Easy'
-                  ? 'bg-emerald-500/15 text-emerald-400 border border-emerald-500/30'
+                  ? 'bg-state-success/15 text-state-success border border-state-success/30'
                   : problem.difficulty === 'Medium'
-                  ? 'bg-amber-500/15 text-amber-400 border border-amber-500/30'
-                  : 'bg-rose-500/15 text-rose-400 border border-rose-500/30'
+                  ? 'bg-state-warning/15 text-state-warning border border-state-warning/30'
+                  : 'bg-state-error/15 text-state-error border border-state-error/30'
               )}
             >
               {problem.difficulty}
             </span>
 
-            <span className="text-[10px] px-2.5 py-0.5 rounded-full font-bold bg-slate-950 text-cyan-400 border border-slate-800">
+            <span className="text-[10px] px-2.5 py-0.5 rounded-full font-bold bg-bg-inset text-accent border border-border-default">
               Pattern: {problem.pattern}
             </span>
 
-            <span className="text-[10px] text-slate-500 font-mono">
+            <span className="text-[10px] text-text-muted font-mono">
               Reward: +{problem.xpReward} XP
             </span>
           </div>
 
-          <h1 className="text-2xl sm:text-3xl font-black text-white">
+          <h1 className="text-2xl sm:text-3xl font-black text-text-primary">
             {problem.title}
           </h1>
 
-          <div className="text-xs text-slate-300 leading-relaxed font-sans prose prose-invert max-w-none">
+          <div className="text-xs text-text-secondary leading-relaxed font-sans prose dark:prose-invert max-w-none">
             <p className="whitespace-pre-wrap">{problem.problemStatement}</p>
           </div>
         </div>
