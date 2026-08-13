@@ -96,15 +96,15 @@ export const AIMentorChat: React.FC = () => {
       {/* Top Header Bar */}
       <div className="flex flex-wrap items-center justify-between gap-3 px-6 py-4 border-b border-border-default bg-bg-surface/70 backdrop-blur-md">
         <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-2xl bg-gradient-to-tr from-accent to-accent-violet flex items-center justify-center text-white font-black shadow-lg shadow-accent/20">
-            <Bot className="w-5 h-5 text-white" />
+          <div className="w-12 h-12 rounded-2xl bg-gradient-to-tr from-accent to-accent-violet flex items-center justify-center text-white font-black shadow-lg shadow-accent/20">
+            <Bot className="w-6 h-6 text-white" />
           </div>
           <div>
-            <h2 className="text-base font-bold text-text-primary flex items-center gap-2">
+            <h2 className="text-lg font-bold text-text-primary flex items-center gap-2">
               DSA Mentor AI
-              <span className="w-2 h-2 rounded-full bg-state-success animate-pulse" />
+              <span className="w-2.5 h-2.5 rounded-full bg-state-success animate-pulse" />
             </h2>
-            <p className="text-[11px] text-text-secondary">Personalized algorithm mentor & tutor</p>
+            <p className="text-xs text-text-secondary">Personalized algorithm mentor & tutor</p>
           </div>
         </div>
 
@@ -115,7 +115,7 @@ export const AIMentorChat: React.FC = () => {
                 key={m}
                 onClick={() => setMode(m)}
                 className={clsx(
-                  'px-2.5 py-1 text-[11px] font-bold rounded-lg capitalize transition-colors',
+                  'px-3 py-1.5 text-xs font-bold rounded-lg capitalize transition-colors',
                   mode === m
                     ? 'bg-accent text-white shadow-sm'
                     : 'text-text-muted hover:text-text-primary'
@@ -131,7 +131,7 @@ export const AIMentorChat: React.FC = () => {
             className="p-2 text-text-muted hover:text-text-primary bg-bg-inset hover:bg-bg-secondary rounded-xl transition-colors border border-border-default"
             title="Reset Conversation"
           >
-            <RotateCcw className="w-4 h-4" />
+            <RotateCcw className="w-5 h-5" />
           </button>
         </div>
       </div>
@@ -147,18 +147,18 @@ export const AIMentorChat: React.FC = () => {
           >
             <div
               className={clsx(
-                'flex-shrink-0 w-8 h-8 rounded-xl flex items-center justify-center shadow-md',
+                'flex-shrink-0 w-10 h-10 rounded-xl flex items-center justify-center shadow-md',
                 msg.role === 'user'
                   ? 'bg-accent text-white'
                   : 'bg-accent/20 border border-accent/30 text-accent'
               )}
             >
-              {msg.role === 'user' ? <User className="w-4 h-4" /> : <Bot className="w-4 h-4" />}
+              {msg.role === 'user' ? <User className="w-5 h-5" /> : <Bot className="w-5 h-5" />}
             </div>
 
             <div
               className={clsx(
-                'px-5 py-4 rounded-2xl text-[13px] leading-relaxed relative group',
+                'px-5 py-4 rounded-2xl text-sm leading-relaxed relative group',
                 msg.role === 'user'
                   ? 'bg-accent text-white rounded-tr-none'
                   : 'surface border border-border-default text-text-primary rounded-tl-none shadow-sm'
@@ -167,7 +167,7 @@ export const AIMentorChat: React.FC = () => {
               <div className="whitespace-pre-wrap">{msg.content}</div>
               <div
                 className={clsx(
-                  'text-[9px] mt-2 font-medium opacity-0 group-hover:opacity-100 transition-opacity absolute -bottom-5',
+                  'text-[10px] mt-2 font-medium opacity-0 group-hover:opacity-100 transition-opacity absolute -bottom-5',
                   msg.role === 'user' ? 'right-1 text-text-muted' : 'left-1 text-text-muted'
                 )}
               >
@@ -195,7 +195,7 @@ export const AIMentorChat: React.FC = () => {
 
       <div className="p-4 border-t border-border-default bg-bg-surface z-10">
         <div className="flex gap-2 overflow-x-auto pb-3 custom-scrollbar">
-          <span className="text-[10px] font-bold text-text-secondary px-2 py-1 uppercase tracking-wider">
+          <span className="text-xs font-bold text-text-secondary px-2 py-1 uppercase tracking-wider">
             Suggestions:
           </span>
           {[
@@ -207,7 +207,7 @@ export const AIMentorChat: React.FC = () => {
             <button
               key={i}
               onClick={() => handleSend(suggestion)}
-              className="text-[11px] whitespace-nowrap px-3 py-1.5 rounded-full bg-bg-inset border border-border-default text-text-muted hover:text-text-primary hover:border-accent/40 transition-colors"
+              className="text-xs whitespace-nowrap px-4 py-2 rounded-full bg-bg-inset border border-border-default text-text-muted hover:text-text-primary hover:border-accent/40 transition-colors"
             >
               {suggestion}
             </button>
@@ -232,17 +232,17 @@ export const AIMentorChat: React.FC = () => {
                 }
               }}
               placeholder="Ask your DSA mentor anything... (e.g. 'Explain recursion trees', 'Debug my loop')"
-              className="w-full bg-transparent p-4 text-xs text-text-primary placeholder:text-text-muted focus:outline-none resize-none custom-scrollbar"
+              className="w-full bg-transparent p-5 text-sm text-text-primary placeholder:text-text-muted focus:outline-none resize-none custom-scrollbar"
               rows={1}
-              style={{ minHeight: '52px', maxHeight: '120px' }}
+              style={{ minHeight: '60px', maxHeight: '120px' }}
             />
           </div>
           <button
             type="submit"
             disabled={!input.trim() || loading}
-            className="w-[52px] h-[52px] flex-shrink-0 flex items-center justify-center rounded-2xl bg-accent hover:bg-accent-muted disabled:opacity-50 disabled:cursor-not-allowed text-white transition-all shadow-md"
+            className="w-[60px] h-[60px] flex-shrink-0 flex items-center justify-center rounded-2xl bg-accent hover:bg-accent-muted disabled:opacity-50 disabled:cursor-not-allowed text-white transition-all shadow-md"
           >
-            <Send className="w-5 h-5" />
+            <Send className="w-6 h-6" />
           </button>
         </form>
       </div>
