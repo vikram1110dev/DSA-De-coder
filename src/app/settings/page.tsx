@@ -37,8 +37,8 @@ export default function SettingsPage() {
     window.location.reload();
   };
 
-  const inputClass = "w-full surface-inset px-3 py-2 text-xs text-text-primary focus:outline-none focus:ring-1 focus:ring-accent rounded-lg";
-  const labelClass = "text-xxs font-semibold text-text-secondary block mb-1";
+  const inputClass = "w-full surface-inset px-3 py-2.5 text-sm text-text-primary focus:outline-none focus:ring-1 focus:ring-accent rounded-lg";
+  const labelClass = "text-xs font-semibold text-text-secondary block mb-1.5";
 
   const [mounted, setMounted] = useState(false);
   useEffect(() => {
@@ -60,16 +60,16 @@ export default function SettingsPage() {
       <div className="space-y-5 max-w-3xl mx-auto">
         {/* Saved indicator */}
         {savedMessage && (
-          <div className="flex items-center gap-2 px-4 py-2 bg-state-success/15 text-state-success border border-state-success/20 rounded-lg text-xs font-medium animate-fade-in">
-            <Check className="w-3.5 h-3.5" /> Settings saved!
+          <div className="flex items-center gap-2 px-4 py-2 bg-state-success/15 text-state-success border border-state-success/20 rounded-lg text-sm font-medium animate-fade-in">
+            <Check className="w-4 h-4" /> Settings saved!
           </div>
         )}
 
         <form onSubmit={handleSave} className="space-y-4">
           {/* Profile */}
-          <div className="surface p-5 space-y-4">
-            <h2 className="text-xs font-semibold text-text-primary flex items-center gap-2 border-b border-border-subtle pb-2.5">
-              <User className="w-4 h-4 text-accent" /> Profile
+          <div className="surface p-6 space-y-5">
+            <h2 className="text-sm font-semibold text-text-primary flex items-center gap-2 border-b border-border-subtle pb-3">
+              <User className="w-5 h-5 text-accent" /> Profile
             </h2>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
               <div>
@@ -84,9 +84,9 @@ export default function SettingsPage() {
           </div>
 
           {/* Learning */}
-          <div className="surface p-5 space-y-4">
-            <h2 className="text-xs font-semibold text-text-primary flex items-center gap-2 border-b border-border-subtle pb-2.5">
-              <BookOpen className="w-4 h-4 text-accent" /> Learning Preferences
+          <div className="surface p-6 space-y-5">
+            <h2 className="text-sm font-semibold text-text-primary flex items-center gap-2 border-b border-border-subtle pb-3">
+              <BookOpen className="w-5 h-5 text-accent" /> Learning Preferences
             </h2>
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
               <div>
@@ -120,9 +120,9 @@ export default function SettingsPage() {
           </div>
 
           {/* AI & Quiet Hours */}
-          <div className="surface p-5 space-y-4">
-            <h2 className="text-xs font-semibold text-text-primary flex items-center gap-2 border-b border-border-subtle pb-2.5">
-              <Sparkles className="w-4 h-4 text-accent" /> AI Mode & Quiet Hours
+          <div className="surface p-6 space-y-5">
+            <h2 className="text-sm font-semibold text-text-primary flex items-center gap-2 border-b border-border-subtle pb-3">
+              <Sparkles className="w-5 h-5 text-accent" /> AI Mode & Quiet Hours
             </h2>
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
               <div>
@@ -146,17 +146,17 @@ export default function SettingsPage() {
           </div>
 
           {/* Actions */}
-          <div className="flex flex-wrap items-center justify-between gap-3 pt-2">
+          <div className="flex flex-wrap items-center justify-between gap-3 pt-3">
             <div className="flex gap-2">
               <button type="button" onClick={handleExportData} className="btn-secondary">
-                <Download className="w-3.5 h-3.5" /> Export Backup
+                <Download className="w-4 h-4" /> Export Backup
               </button>
               <button type="button" onClick={() => setShowResetWarning(true)} className="btn-secondary !text-state-error border-state-error/20 hover:border-state-error/50 hover:bg-state-error/10">
-                <Trash2 className="w-3.5 h-3.5" /> Reset App
+                <Trash2 className="w-4 h-4" /> Reset App
               </button>
             </div>
             <button type="submit" className="btn-primary px-5 py-2.5">
-              <Save className="w-3.5 h-3.5" /> Save Preferences
+              <Save className="w-4 h-4" /> Save Preferences
             </button>
           </div>
         </form>
@@ -186,7 +186,7 @@ export default function SettingsPage() {
               </button>
               <button 
                 onClick={handleReset}
-                className="px-4 py-2 text-xs font-semibold text-white bg-state-error rounded-lg hover:bg-state-error/90 transition-colors"
+                className="px-4 py-2 text-sm font-semibold text-white bg-state-error rounded-lg hover:bg-state-error/90 transition-colors"
               >
                 Yes, Reset Everything
               </button>
