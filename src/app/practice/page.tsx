@@ -37,23 +37,23 @@ export default function PracticeCatalogPage() {
     <AppLayout>
       <div className="space-y-5">
         {/* Stats bar */}
-        <div className="flex items-center gap-4 text-xxs font-medium text-text-muted">
+        <div className="flex items-center gap-4 text-xs font-medium text-text-muted">
           <span>{filteredProblems.length} problems</span>
           <span className="text-state-success">{solvedCount} solved</span>
           <span>{filteredProblems.length - solvedCount} remaining</span>
         </div>
 
         {/* Filters */}
-        <div className="surface p-3 space-y-3">
+        <div className="surface p-4 space-y-3">
           <div className="flex flex-col sm:flex-row items-center justify-between gap-3">
             {/* Difficulty pills */}
-            <div className="flex items-center gap-1 overflow-x-auto w-full sm:w-auto">
+            <div className="flex items-center gap-1.5 overflow-x-auto w-full sm:w-auto">
               {['All', 'Easy', 'Medium', 'Hard'].map((diff) => (
                 <button
                   key={diff}
                   onClick={() => setSelectedDifficulty(diff)}
                   className={clsx(
-                    'px-3 py-1.5 text-xs font-medium rounded-lg transition-all',
+                    'px-4 py-2 text-sm font-medium rounded-lg transition-all',
                     selectedDifficulty === diff
                       ? 'bg-accent text-bg-primary'
                       : 'text-text-secondary hover:text-text-primary hover:bg-white/[0.04]'
@@ -65,25 +65,25 @@ export default function PracticeCatalogPage() {
             </div>
 
             {/* Search */}
-            <div className="relative w-full sm:w-64">
-              <Search className="w-3.5 h-3.5 text-text-muted absolute left-3 top-2.5" />
+            <div className="relative w-full sm:w-72">
+              <Search className="w-4 h-4 text-text-muted absolute left-3 top-2.5" />
               <input
                 type="text"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 placeholder="Search problems..."
-                className="w-full surface-inset pl-9 pr-3 py-2 text-xs text-text-primary focus:outline-none focus:ring-1 focus:ring-accent rounded-lg"
+                className="w-full surface-inset pl-10 pr-3 py-2.5 text-sm text-text-primary focus:outline-none focus:ring-1 focus:ring-accent rounded-lg"
               />
             </div>
           </div>
 
           {/* Pattern filter */}
           <div className="flex items-center gap-2 pt-2 border-t border-border-subtle">
-            <Filter className="w-3 h-3 text-accent" />
+            <Filter className="w-4 h-4 text-accent" />
             <select
               value={selectedPattern}
               onChange={(e) => setSelectedPattern(e.target.value)}
-              className="surface-inset px-2.5 py-1 text-xs text-text-secondary focus:outline-none focus:ring-1 focus:ring-accent rounded-md"
+              className="surface-inset px-3 py-1.5 text-sm text-text-secondary focus:outline-none focus:ring-1 focus:ring-accent rounded-md"
             >
               {patterns.map((pat) => <option key={pat} value={pat}>{pat}</option>)}
             </select>
@@ -91,31 +91,31 @@ export default function PracticeCatalogPage() {
         </div>
 
         {/* Problems list */}
-        <div className="space-y-2">
+        <div className="space-y-2.5">
           {filteredProblems.map((prob) => {
             const isSolved = solvedIds.includes(prob.id);
             return (
               <Link
                 key={prob.id}
                 href={`/practice/${prob.id}`}
-                className="surface-interactive flex items-center justify-between gap-4 p-4 group"
+                className="surface-interactive flex items-center justify-between gap-4 p-5 group"
               >
-                <div className="flex items-center gap-3 min-w-0">
+                <div className="flex items-center gap-3.5 min-w-0">
                   <div className={clsx(
-                    'w-7 h-7 rounded-lg flex items-center justify-center shrink-0',
+                    'w-8 h-8 rounded-lg flex items-center justify-center shrink-0',
                     isSolved ? 'bg-state-success/15 text-state-success' : 'bg-bg-inset text-text-disabled'
                   )}>
-                    {isSolved ? <CheckCircle2 className="w-3.5 h-3.5" /> : <Code2 className="w-3.5 h-3.5" />}
+                    {isSolved ? <CheckCircle2 className="w-4 h-4" /> : <Code2 className="w-4 h-4" />}
                   </div>
 
                   <div className="min-w-0">
                     <div className="flex items-center gap-2 flex-wrap">
-                      <h3 className="text-xs font-semibold text-text-primary group-hover:text-accent transition-colors truncate">
+                      <h3 className="text-sm font-semibold text-text-primary group-hover:text-accent transition-colors truncate">
                         {prob.title}
                       </h3>
                       <span className="badge badge-cyan">{prob.pattern}</span>
                     </div>
-                    <p className="text-xxs text-text-muted truncate mt-0.5 max-w-lg">
+                    <p className="text-xs text-text-muted truncate mt-1 max-w-lg">
                       {prob.summary}
                     </p>
                   </div>
@@ -130,8 +130,8 @@ export default function PracticeCatalogPage() {
                   )}>
                     {prob.difficulty}
                   </span>
-                  <span className="text-xxs font-mono text-text-muted">+{prob.xpReward} XP</span>
-                  <ArrowRight className="w-3.5 h-3.5 text-text-disabled group-hover:text-accent transition-colors" />
+                  <span className="text-xs font-mono text-text-muted">+{prob.xpReward} XP</span>
+                  <ArrowRight className="w-4 h-4 text-text-disabled group-hover:text-accent transition-colors" />
                 </div>
               </Link>
             );

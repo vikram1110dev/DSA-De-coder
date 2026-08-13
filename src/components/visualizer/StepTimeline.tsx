@@ -12,8 +12,8 @@ interface StepTimelineProps {
 
 export const StepTimeline: React.FC<StepTimelineProps> = ({ steps, currentStepIndex }) => {
   return (
-    <div className="surface h-full max-h-[400px] overflow-y-auto p-3 space-y-0.5">
-      <div className="text-xxs font-semibold text-text-muted uppercase tracking-wider mb-2 px-1">
+    <div className="surface h-full max-h-[460px] overflow-y-auto p-3 space-y-0.5">
+      <div className="text-xs font-semibold text-text-muted uppercase tracking-wider mb-2 px-1">
         Algorithm Steps
       </div>
 
@@ -26,7 +26,7 @@ export const StepTimeline: React.FC<StepTimelineProps> = ({ steps, currentStepIn
           <div
             key={idx}
             className={clsx(
-              'flex items-start gap-2 px-2 py-1.5 rounded-md transition-colors text-xxs',
+              'flex items-start gap-2 px-2 py-1.5 rounded-md transition-colors text-xs',
               isCurrent && 'bg-accent-muted',
               isComplete && 'opacity-60',
             )}
@@ -34,11 +34,11 @@ export const StepTimeline: React.FC<StepTimelineProps> = ({ steps, currentStepIn
             {/* State icon */}
             <div className="shrink-0 mt-0.5">
               {isComplete ? (
-                <Check className="w-3 h-3 text-state-success" />
+                <Check className="w-3.5 h-3.5 text-state-success" />
               ) : isCurrent ? (
-                <ChevronRight className="w-3 h-3 text-accent animate-pulse" />
+                <ChevronRight className="w-3.5 h-3.5 text-accent animate-pulse" />
               ) : (
-                <Circle className="w-3 h-3 text-text-disabled" />
+                <Circle className="w-3.5 h-3.5 text-text-disabled" />
               )}
             </div>
 

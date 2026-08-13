@@ -42,7 +42,7 @@ export default function VisualizerPage() {
     <AppLayout>
       <div className="space-y-5">
         {/* Category selector */}
-        <div className="flex items-center gap-1 surface p-1.5 overflow-x-auto">
+        <div className="flex items-center gap-1.5 surface p-2 overflow-x-auto">
           {CATEGORIES.map((cat) => {
             const Icon = cat.icon;
             const isActive = activeCategory === cat.id;
@@ -51,13 +51,13 @@ export default function VisualizerPage() {
                 key={cat.id}
                 onClick={() => setActiveCategory(cat.id)}
                 className={clsx(
-                  'flex items-center gap-1.5 px-3 py-2 text-xs font-medium rounded-lg whitespace-nowrap transition-all',
+                  'flex items-center gap-2 px-4 py-2.5 text-sm font-medium rounded-lg whitespace-nowrap transition-all',
                   isActive
                     ? 'bg-accent text-bg-primary'
                     : 'text-text-secondary hover:text-text-primary hover:bg-white/[0.04]'
                 )}
               >
-                <Icon className="w-3.5 h-3.5" />
+                <Icon className="w-4 h-4" />
                 <span>{cat.name}</span>
               </button>
             );

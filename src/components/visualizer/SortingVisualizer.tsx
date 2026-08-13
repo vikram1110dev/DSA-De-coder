@@ -285,14 +285,14 @@ export const SortingVisualizer: React.FC = () => {
   return (
     <div className="space-y-4">
       {/* Algorithm selector + custom input */}
-      <div className="flex flex-wrap items-center justify-between gap-3 surface p-3">
-        <div className="flex items-center gap-1.5 overflow-x-auto">
+      <div className="flex flex-wrap items-center justify-between gap-3 surface p-4">
+        <div className="flex items-center gap-2 overflow-x-auto">
           {(['bubble', 'selection', 'insertion', 'merge', 'quick'] as SortAlgorithm[]).map((algo) => (
             <button
               key={algo}
               onClick={() => setAlgorithm(algo)}
               className={clsx(
-                'px-3 py-1.5 text-xs font-medium rounded-lg capitalize transition-all whitespace-nowrap',
+                'px-4 py-2 text-sm font-medium rounded-lg capitalize transition-all whitespace-nowrap',
                 algorithm === algo ? 'bg-accent text-bg-primary' : 'text-text-secondary hover:text-text-primary hover:bg-white/[0.04]'
               )}
             >
@@ -306,11 +306,11 @@ export const SortingVisualizer: React.FC = () => {
             value={customInput}
             onChange={(e) => setCustomInput(e.target.value)}
             placeholder="e.g. 50, 10, 80"
-            className="w-44 surface-inset px-2.5 py-1.5 text-xs text-text-primary focus:outline-none focus:ring-1 focus:ring-accent rounded-md"
+            className="w-52 surface-inset px-3 py-2 text-sm text-text-primary focus:outline-none focus:ring-1 focus:ring-accent rounded-md"
           />
           <button onClick={handleApplyCustom} className="btn-primary py-1.5">Apply</button>
-          <button onClick={handleRandomize} className="btn-ghost py-1.5">
-            <RefreshCw className="w-3 h-3" /> Random
+          <button onClick={handleRandomize} className="btn-ghost py-2">
+            <RefreshCw className="w-3.5 h-3.5" /> Random
           </button>
         </div>
       </div>
@@ -339,15 +339,15 @@ export const SortingVisualizer: React.FC = () => {
         {/* Visualization: Array bars */}
         <div className="flex flex-col items-center gap-2">
           {/* Legend */}
-          <div className="flex items-center gap-4 text-xxs font-medium text-text-muted mb-2">
-            <span className="flex items-center gap-1.5"><span className="w-2.5 h-2.5 rounded-sm bg-accent" />Default</span>
-            <span className="flex items-center gap-1.5"><span className="w-2.5 h-2.5 rounded-sm bg-viz-comparing" />Comparing</span>
-            <span className="flex items-center gap-1.5"><span className="w-2.5 h-2.5 rounded-sm bg-viz-swapping" />Swapping</span>
-            <span className="flex items-center gap-1.5"><span className="w-2.5 h-2.5 rounded-sm bg-viz-sorted" />Sorted</span>
+          <div className="flex items-center gap-5 text-xs font-medium text-text-muted mb-3">
+            <span className="flex items-center gap-1.5"><span className="w-3 h-3 rounded-sm bg-accent" />Default</span>
+            <span className="flex items-center gap-1.5"><span className="w-3 h-3 rounded-sm bg-viz-comparing" />Comparing</span>
+            <span className="flex items-center gap-1.5"><span className="w-3 h-3 rounded-sm bg-viz-swapping" />Swapping</span>
+            <span className="flex items-center gap-1.5"><span className="w-3 h-3 rounded-sm bg-viz-sorted" />Sorted</span>
           </div>
 
           {/* Bars */}
-          <div className="flex items-end justify-center gap-2 sm:gap-3 h-52 w-full">
+          <div className="flex items-end justify-center gap-2 sm:gap-3 h-60 w-full">
             {currentStep.array.map((value, idx) => {
               const isComparing = currentStep.comparing.includes(idx);
               const isSwapping = currentStep.swapping.includes(idx);
@@ -355,8 +355,8 @@ export const SortingVisualizer: React.FC = () => {
               const heightPct = Math.max(12, (value / maxVal) * 100);
 
               return (
-                <div key={idx} className="flex-1 max-w-[52px] flex flex-col items-center gap-1.5">
-                  <span className="text-xxs font-mono font-semibold text-text-secondary">{value}</span>
+                <div key={idx} className="flex-1 max-w-[56px] flex flex-col items-center gap-1.5">
+                  <span className="text-xs font-mono font-semibold text-text-secondary">{value}</span>
                   <div
                     style={{ height: `${heightPct}%` }}
                     className={clsx(
@@ -367,7 +367,7 @@ export const SortingVisualizer: React.FC = () => {
                         : 'bg-gradient-to-t from-accent/80 to-accent'
                     )}
                   />
-                  <span className="text-xxs font-mono text-text-disabled">[{idx}]</span>
+                  <span className="text-xs font-mono text-text-disabled">[{idx}]</span>
                 </div>
               );
             })}

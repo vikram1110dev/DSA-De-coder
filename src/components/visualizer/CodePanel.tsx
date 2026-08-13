@@ -38,13 +38,13 @@ export const CodePanel: React.FC<CodePanelProps> = ({
               key={tab.id}
               onClick={() => setActiveTab(tab.id)}
               className={clsx(
-                'flex items-center gap-1.5 px-3 py-2 text-xxs font-medium border-b-2 transition-colors',
+                'flex items-center gap-1.5 px-3 py-2.5 text-xs font-medium border-b-2 transition-colors',
                 activeTab === tab.id
                   ? 'text-accent border-accent'
                   : 'text-text-muted border-transparent hover:text-text-secondary'
               )}
             >
-              <Icon className="w-3 h-3" />
+              <Icon className="w-3.5 h-3.5" />
               {tab.label}
             </button>
           );
@@ -54,7 +54,7 @@ export const CodePanel: React.FC<CodePanelProps> = ({
       {/* Tab content */}
       <div className="p-4">
         {activeTab === 'code' && (
-          <div className="space-y-0.5 font-mono text-xs">
+          <div className="space-y-0.5 font-mono text-sm">
             {codeLines.map((line, idx) => (
               <div
                 key={idx}
@@ -65,7 +65,7 @@ export const CodePanel: React.FC<CodePanelProps> = ({
                     : 'text-text-muted'
                 )}
               >
-                <span className="text-xxs text-text-disabled select-none w-4 text-right shrink-0">
+                <span className="text-xs text-text-disabled select-none w-5 text-right shrink-0">
                   {idx + 1}
                 </span>
                 <span className="whitespace-pre">{line}</span>
@@ -75,7 +75,7 @@ export const CodePanel: React.FC<CodePanelProps> = ({
         )}
 
         {activeTab === 'why' && (
-          <div className="text-xs text-text-secondary leading-relaxed">
+          <div className="text-sm text-text-secondary leading-relaxed">
             {whyExplanation || 'Select an algorithm and play the simulation to see why each step works.'}
           </div>
         )}
@@ -85,16 +85,16 @@ export const CodePanel: React.FC<CodePanelProps> = ({
             {complexityInfo ? (
               <>
                 <div className="flex items-center gap-3">
-                  <span className="text-xxs font-semibold text-text-muted uppercase w-12">Time</span>
-                  <span className="font-mono text-sm font-bold text-accent">{complexityInfo.time}</span>
+                  <span className="text-xs font-semibold text-text-muted uppercase w-14">Time</span>
+                  <span className="font-mono text-base font-bold text-accent">{complexityInfo.time}</span>
                 </div>
                 <div className="flex items-center gap-3">
-                  <span className="text-xxs font-semibold text-text-muted uppercase w-12">Space</span>
-                  <span className="font-mono text-sm font-bold text-accent-emerald">{complexityInfo.space}</span>
+                  <span className="text-xs font-semibold text-text-muted uppercase w-14">Space</span>
+                  <span className="font-mono text-base font-bold text-accent-emerald">{complexityInfo.space}</span>
                 </div>
               </>
             ) : (
-              <p className="text-xs text-text-muted">Complexity info will appear when an algorithm is selected.</p>
+              <p className="text-sm text-text-muted">Complexity info will appear when an algorithm is selected.</p>
             )}
           </div>
         )}
