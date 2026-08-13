@@ -75,8 +75,16 @@ export const AlgorithmLab: React.FC<AlgorithmLabProps> = ({
         e.preventDefault();
         onRestart();
         break;
+      case ']':
+        e.preventDefault();
+        onSpeedChange(Math.min(speed + 0.5, 5));
+        break;
+      case '[':
+        e.preventDefault();
+        onSpeedChange(Math.max(speed - 0.5, 0.25));
+        break;
     }
-  }, [onPlayPause, onStepForward, onStepBackward, onRestart]);
+  }, [onPlayPause, onStepForward, onStepBackward, onRestart, onSpeedChange, speed]);
 
   useEffect(() => {
     window.addEventListener('keydown', handleKeyDown);
@@ -114,7 +122,7 @@ export const AlgorithmLab: React.FC<AlgorithmLabProps> = ({
               'flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition-all',
               isPlaying
                 ? 'bg-accent-amber text-bg-primary hover:bg-accent-amber/90'
-                : 'bg-accent text-bg-primary hover:bg-accent-hover'
+                 : 'bg-accent text-bg-primary hover:bg-accent-hover'
             )}
             title="Play/Pause (Space)"
           >
@@ -129,7 +137,7 @@ export const AlgorithmLab: React.FC<AlgorithmLabProps> = ({
           {/* Speed selector */}
           <div className="flex items-center gap-0.5 ml-2 surface-inset px-1 py-0.5 rounded-md">
             <Gauge className="w-3 h-3 text-text-muted ml-1" />
-            {[0.5, 1, 2, 3].map((s) => (
+            {[0.25, 0.5, 1, 2, 5].map((s) => (
               <button
                 key={s}
                 onClick={() => onSpeedChange(s)}
@@ -137,6 +145,7 @@ export const AlgorithmLab: React.FC<AlgorithmLabProps> = ({
                   'px-1.5 py-0.5 text-xxs font-semibold rounded transition-colors',
                   speed === s ? 'bg-accent text-bg-primary' : 'text-text-muted hover:text-text-secondary'
                 )}
+                title={`Speed shortcut: [ to slow down, ] to speed up`}
               >
                 {s}x
               </button>
