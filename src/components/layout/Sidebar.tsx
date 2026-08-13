@@ -141,7 +141,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
             <div key={section.label}>
               {/* Section label */}
               {!isCollapsed && (
-                <div className="px-2 mb-1.5 text-xxs font-semibold text-text-muted tracking-widest uppercase">
+                <div className="px-2 mb-1.5 text-xs font-semibold text-text-muted tracking-widest uppercase">
                   {section.label}
                 </div>
               )}
@@ -170,12 +170,12 @@ export const Sidebar: React.FC<SidebarProps> = ({
                     >
                       <Icon
                         className={clsx(
-                          'w-4 h-4 shrink-0',
+                          'w-[18px] h-[18px] shrink-0',
                           isActive ? 'text-accent' : 'text-text-muted group-hover:text-text-secondary'
                         )}
                       />
                       {!isCollapsed && (
-                        <span className="text-xs font-medium truncate">{item.name}</span>
+                        <span className="text-sm font-medium truncate">{item.name}</span>
                       )}
 
                       {/* Active indicator */}
@@ -207,8 +207,8 @@ export const Sidebar: React.FC<SidebarProps> = ({
               isCollapsed ? 'justify-center p-2.5' : 'px-2.5 py-2'
             )}
           >
-            <Settings className="w-4 h-4 text-text-muted shrink-0" />
-            {!isCollapsed && <span className="text-xs font-medium">Settings</span>}
+            <Settings className="w-[18px] h-[18px] text-text-muted shrink-0" />
+            {!isCollapsed && <span className="text-sm font-medium">Settings</span>}
           </Link>
 
           {/* Collapse toggle (desktop only) */}
@@ -225,8 +225,8 @@ export const Sidebar: React.FC<SidebarProps> = ({
                 <PanelLeft className="w-4 h-4" />
               ) : (
                 <>
-                  <PanelLeftClose className="w-4 h-4" />
-                  <span className="text-xs font-medium">Collapse</span>
+                  <PanelLeftClose className="w-[18px] h-[18px]" />
+                  <span className="text-sm font-medium">Collapse</span>
                 </>
               )}
             </button>

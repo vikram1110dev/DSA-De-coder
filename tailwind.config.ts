@@ -140,7 +140,7 @@ const config: Config = {
         'step-pulse': 'stepPulse 1.5s ease-in-out infinite',
       },
       fontSize: {
-        'xxs': ['0.625rem', { lineHeight: '0.875rem' }],  // 10px
+        'xxs': ['0.6875rem', { lineHeight: '1rem' }],  // 11px — scaled up from 10px
       },
     },
   },

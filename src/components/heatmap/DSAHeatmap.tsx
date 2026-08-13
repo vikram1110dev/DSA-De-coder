@@ -53,26 +53,26 @@ export const DSAHeatmap: React.FC<DSAHeatmapProps> = ({ activities, streak }) =>
       {/* Header */}
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2">
-          <Calendar className="w-4 h-4 text-accent" />
-          <h3 className="text-sm font-semibold text-text-primary">Activity Timeline</h3>
+          <Calendar className="w-5 h-5 text-accent" />
+          <h3 className="text-base font-semibold text-text-primary">Activity Timeline</h3>
           <span className="badge badge-cyan">365 days</span>
         </div>
 
         {/* Streak status */}
         <div className="flex items-center gap-3">
           {streak.streakAtRisk ? (
-            <span className="flex items-center gap-1.5 text-xxs font-medium text-accent-amber">
-              <AlertTriangle className="w-3 h-3" />
+            <span className="flex items-center gap-1.5 text-xs font-medium text-accent-amber">
+              <AlertTriangle className="w-3.5 h-3.5" />
               Streak at risk
             </span>
           ) : (
-            <span className="flex items-center gap-1.5 text-xxs font-medium text-state-success">
-              <Flame className="w-3 h-3 fill-state-success" />
+            <span className="flex items-center gap-1.5 text-xs font-medium text-state-success">
+              <Flame className="w-3.5 h-3.5 fill-state-success" />
               {streak.currentStreak}d active
             </span>
           )}
-          <span className="flex items-center gap-1 text-xxs text-text-muted">
-            <Shield className="w-3 h-3" />
+          <span className="flex items-center gap-1.5 text-xs text-text-muted">
+            <Shield className="w-3.5 h-3.5" />
             {streak.freezesAvailable} freezes
           </span>
         </div>
