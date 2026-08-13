@@ -13,7 +13,8 @@ import {
   Moon,
   Sparkles,
   Check,
-  Smartphone
+  Smartphone,
+  CalendarRange
 } from 'lucide-react';
 import { clsx } from 'clsx';
 import {
@@ -76,6 +77,69 @@ export const ReminderManager: React.FC = () => {
     }
   };
 
+  const handleExportICS = () => {
+    const enabledReminders = reminders.filter((r) => r.isEnabled);
+    if (enabledReminders.length === 0) {
+      alert('No enabled reminders to export.');
+      return;
+    }
+
+    const icsContent = [
+      'BEGIN:VCALENDAR',
+      'VERSION:2.0',
+      'PRODID:-//DSA De-coder//Reminder Calendar//EN',
+      'CALSCALE:GREGORIAN',
+      'METHOD:PUBLISH'
+    ];
+
+    enabledReminders.forEach((rem) => {
+      const now = new Date();
+      const timeParts = rem.time.split(':');
+      const hours = parseInt(timeParts[0] || '0', 10);
+      const minutes = parseInt(timeParts[1] || '0', 10);
+
+      const startDate = new Date();
+      startDate.setHours(hours, minutes, 0, 0);
+
+      const formatDate = (date: Date) => {
+        return date.toISOString().replace(/[-:]/g, '').split('.')[0] + 'Z';
+      };
+
+      const startStr = formatDate(startDate);
+      const endDate = new Date(startDate.getTime() + 60 * 60 * 1000);
+      const endStr = formatDate(endDate);
+
+      icsContent.push('BEGIN:VEVENT');
+      icsContent.push(`UID:rem-${rem.id}@dsa-decoder.local`);
+      icsContent.push(`DTSTAMP:${formatDate(now)}`);
+      icsContent.push(`DTSTART:${startStr}`);
+      icsContent.push(`DTEND:${endStr}`);
+      icsContent.push(`SUMMARY:DSA Study: ${rem.title}`);
+      icsContent.push(`DESCRIPTION:Scheduled reminder for your ${rem.type} session using DSA De-coder.`);
+
+      if (rem.repeatType === 'daily') {
+        icsContent.push('RRULE:FREQ=DAILY');
+      } else if (rem.repeatType === 'weekdays') {
+        icsContent.push('RRULE:FREQ=WEEKLY;BYDAY=MO,TU,WE,TH,FR');
+      } else if (rem.repeatType === 'weekends') {
+        icsContent.push('RRULE:FREQ=WEEKLY;BYDAY=SA,SU');
+      }
+
+      icsContent.push('END:VEVENT');
+    });
+
+    icsContent.push('END:VCALENDAR');
+
+    const blob = new Blob([icsContent.join('\r\n')], { type: 'text/calendar;charset=utf-8' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.setAttribute('download', 'dsa-study-reminders.ics');
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
+
   return (
     <div className="space-y-8">
       {/* Header Bar */}
@@ -111,7 +175,15 @@ export const ReminderManager: React.FC = () => {
             className="flex items-center gap-1.5 px-3 py-2 text-xs font-bold text-text-secondary bg-bg-inset hover:bg-bg-secondary border border-border-default rounded-xl transition-colors"
           >
             <Smartphone className="w-4 h-4 text-state-success" />
-            <span>Enable Browser Alerts</span>
+            <span>Enable Alerts</span>
+          </button>
+
+          <button
+            onClick={handleExportICS}
+            className="flex items-center gap-1.5 px-3 py-2 text-xs font-bold text-text-secondary bg-bg-inset hover:bg-bg-secondary border border-border-default rounded-xl transition-colors"
+          >
+            <CalendarRange className="w-4 h-4 text-accent-violet" />
+            <span>Export Calendar</span>
           </button>
 
           <button
