@@ -112,6 +112,60 @@
     border-color: rgba(225, 29, 72, 0.18);
   }
 
+  /* ── Forest Theme ── */
+  :root.forest {
+    --bg-primary: #0b1511;
+    --bg-secondary: #11201a;
+    --bg-surface: #172c24;
+    --bg-elevated: #203c31;
+    --bg-inset: #060b09;
+
+    --text-primary: #ecfdf5;
+    --text-secondary: #a7f3d0;
+    --text-muted: #34d399;
+    --text-disabled: #065f46;
+
+    --accent: #10b981;
+    --accent-hover: #34d399;
+    --accent-muted: rgba(16, 185, 129, 0.15);
+
+    --border-subtle: rgba(16, 185, 129, 0.06);
+    --border-default: rgba(16, 185, 129, 0.12);
+    --border-strong: rgba(16, 185, 129, 0.2);
+
+    --scrollbar-thumb: rgba(16, 185, 129, 0.1);
+    --scrollbar-thumb-hover: rgba(16, 185, 129, 0.2);
+
+    --hover-overlay: rgba(16, 185, 129, 0.05);
+  }
+
+  /* ── Cyberpunk Theme ── */
+  :root.cyberpunk {
+    --bg-primary: #0f051d;
+    --bg-secondary: #18092e;
+    --bg-surface: #220d40;
+    --bg-elevated: #31135c;
+    --bg-inset: #090212;
+
+    --text-primary: #f0e6ff;
+    --text-secondary: #d8b4fe;
+    --text-muted: #c084fc;
+    --text-disabled: #701a75;
+
+    --accent: #d946ef;
+    --accent-hover: #f472b6;
+    --accent-muted: rgba(217, 70, 239, 0.15);
+
+    --border-subtle: rgba(217, 70, 239, 0.08);
+    --border-default: rgba(217, 70, 239, 0.15);
+    --border-strong: rgba(217, 70, 239, 0.25);
+
+    --scrollbar-thumb: rgba(217, 70, 239, 0.1);
+    --scrollbar-thumb-hover: rgba(217, 70, 239, 0.2);
+
+    --hover-overlay: rgba(217, 70, 239, 0.05);
+  }
+
   /* Base element styles */
   html {
     -webkit-font-smoothing: antialiased;
