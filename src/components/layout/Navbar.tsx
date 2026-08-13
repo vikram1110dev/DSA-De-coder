@@ -13,6 +13,8 @@ import {
   ExternalLink,
   Sun,
   Moon,
+  Leaf,
+  Zap,
 } from 'lucide-react';
 import { storageService } from '@/lib/storage';
 import { NotificationItem, UserProfile } from '@/types';
@@ -47,12 +49,14 @@ const ThemeToggle = () => {
   return (
     <button
       onClick={toggleTheme}
-      className="relative p-2 text-text-muted hover:text-text-primary rounded-lg hover:bg-[var(--hover-overlay)] transition-all"
-      aria-label={`Switch to ${theme === 'dark' ? 'light' : 'dark'} mode`}
-      title={`Switch to ${theme === 'dark' ? 'light' : 'dark'} mode`}
+      className="relative w-8 h-8 flex items-center justify-center text-text-muted hover:text-text-primary rounded-lg hover:bg-[var(--hover-overlay)] transition-all"
+      aria-label={`Current theme: ${theme}. Click to switch.`}
+      title={`Current theme: ${theme}. Click to switch.`}
     >
-      <Sun className={clsx('w-4 h-4 transition-all duration-300 absolute inset-0 m-auto', theme === 'light' ? 'opacity-100 rotate-0 scale-100' : 'opacity-0 rotate-90 scale-0')} />
-      <Moon className={clsx('w-4 h-4 transition-all duration-300', theme === 'dark' ? 'opacity-100 rotate-0 scale-100' : 'opacity-0 -rotate-90 scale-0')} />
+      {theme === 'light' && <Sun className="w-4 h-4 text-accent-amber animate-in zoom-in-50 duration-200" />}
+      {theme === 'dark' && <Moon className="w-4 h-4 text-accent animate-in zoom-in-50 duration-200" />}
+      {theme === 'forest' && <Leaf className="w-4 h-4 text-state-success animate-in zoom-in-50 duration-200" />}
+      {theme === 'cyberpunk' && <Zap className="w-4 h-4 text-accent-rose animate-in zoom-in-50 duration-200" />}
     </button>
   );
 };
